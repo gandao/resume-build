@@ -1,0 +1,47 @@
+<template>
+    <div id='header'>
+        <el-row class="header-wrapper">
+            <el-col class="logo" :span='8'><img src='./logo.png' /><span>Resume Builder</span></el-col>
+            <el-col :span='10'  :offset="6">
+                <el-row class='menu'>
+                    <el-col :span=6><span>首页</span></el-col>
+                    <el-col :span=6><span>查看模板</span></el-col>
+                    <el-col :span=6><span>个人中心</span></el-col>
+                    <el-col :span=6><span>登出</span></el-col>
+                </el-row>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+<style lang="less" scoped>
+#header{
+    font-size: 1.05rem;
+    color: #303133;
+    text-align: center;
+    line-height: 60px;
+    .header-wrapper{
+        .logo{
+            text-align: left;
+            cursor: pointer;
+            img{
+                display: inline-block;
+                margin-top: 10px;
+                width: 40px;
+                height: 40px;
+            }
+            span{
+                vertical-align: top;
+                margin-left: 20px;
+                font-size: 1.08em;
+                font-weight: 700;
+            }
+        }
+        .menu .el-col span{
+            cursor: pointer;
+            &:hover{
+                color: #000;
+            }
+        }
+    }
+}
+</style>
