@@ -1,8 +1,8 @@
 <template>
     <div id='header'>
         <el-row class="header-wrapper">
-            <el-col class="logo" :span='8'><img src='./logo.png' /><span>Resume Builder</span></el-col>
-            <el-col :span='10'  :offset="6">
+            <el-col class="logo" :span='6'><img src='./logo.png' /><span>Resume Builder</span></el-col>
+            <el-col :span='6'  :offset="12">
                 <el-row class='menu'>
                     <el-col :span=6><span>首页</span></el-col>
                     <el-col :span=6><span>查看模板</span></el-col>
@@ -32,7 +32,7 @@
             span{
                 vertical-align: top;
                 margin-left: 20px;
-                font-size: 1.08em;
+                font-size: 1.0em;
                 font-weight: 700;
             }
         }

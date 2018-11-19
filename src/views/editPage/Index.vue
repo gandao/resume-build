@@ -2,15 +2,17 @@
     <div id='edit-page'>
         <el-container>
             <el-aside width='250px'><Menu /></el-aside>
-            <el-main></el-main>
+            <el-main><Resume /></el-main>
         </el-container>
     </div>
 </template>
 <script>
 import Menu from './menu/Menu.vue'
+import Resume from './resume/Resume.vue'
 export default {
   components: {
-    Menu
+    Menu,
+    Resume
   }
 }
 </script>
@@ -22,6 +24,9 @@ export default {
         height: 100%;
         &>.el-aside{
             border-right: 1px solid #E4E7ED;
+        }
+        &>.el-main{
+            width: 100%;   
         }
     }
 }
