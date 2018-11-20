@@ -7,7 +7,7 @@
     </div>
 </template>
 <script>
-import Menu from './menu/Menu.vue'
+import Menu from './menu/Index.vue'
 import Resume from './resume/Resume.vue'
 export default {
   components: {
@@ -23,10 +23,11 @@ export default {
     &>.el-container{
         height: 100%;
         &>.el-aside{
+            overflow: hidden;
             border-right: 1px solid #E4E7ED;
         }
         &>.el-main{
-            width: 100%;   
+            width: 100%;
         }
     }
 }

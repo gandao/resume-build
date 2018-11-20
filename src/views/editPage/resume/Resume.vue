@@ -1,6 +1,8 @@
 <template>
+    <!--startprint-->
     <div id='resume'>
     </div>
+    <!--endprint-->
 </template>
 <script>
 export default {
@@ -17,6 +19,5 @@ export default {
     margin-bottom: 30px;
     border: 1px solid #E4E7ED;
     box-shadow: 2px 2px 8px #EBEEF5,-2px -2px  8px #EBEEF5;
-
 }
 </style>
