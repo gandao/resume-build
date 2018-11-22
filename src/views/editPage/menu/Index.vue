@@ -37,18 +37,19 @@ export default {
             var bdhtml = window.document.body.innerHTML
 
             // 找到两个标签
-            var sprnstr = "<!--startprint-->"
-            var eprnstr = "<!--endprint-->"
+            var sprnstr = "<object"
+            var eprnstr = "</object>"
 
             // 切除标签以外的东西
-            var prnhtml = bdhtml.substr(bdhtml.indexOf(sprnstr) + 17)
+            var prnhtml = bdhtml.substr(bdhtml.indexOf(sprnstr) + 58)
             prnhtml = prnhtml.substring(0,prnhtml.indexOf(eprnstr))
             // 替换body的内容
+            // console.log(prnhtml)
             window.document.body.innerHTML = prnhtml
             window.print()
-            // 将页面重新改回原始样式
-            // window.document.body.innerHTML = bdhtml
-            // // 此处是业务需要 由于有动态生成数据 直接返回样式会乱 所以手动刷新了一下
+            // // 将页面重新改回原始样式
+            window.document.body.innerHTML = bdhtml
+            // // // 此处是业务需要 由于有动态生成数据 直接返回样式会乱 所以手动刷新了一下
             window.location.reload()
 
         },

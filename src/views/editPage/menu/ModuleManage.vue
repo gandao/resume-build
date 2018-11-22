@@ -4,11 +4,11 @@
             <div @click="onHandleClose"><i class="el-icon-arrow-left"></i>关闭</div>
         </div>
         <ul class='selected'>
-            <li v-for='(item,index) in selectedModule' :key='index'><img src='item.url'><span>{{item.text}}</span><i :class="item.isImportant?'el-icon-warning':'el-icon-remove'"></i></li>
+            <li v-for='(item,index) in selectedModule' :key='index'><i :class='"fa fa-"+item.url'></i><span>{{item.text}}</span><i :class="item.isImportant?'el-icon-warning':'el-icon-remove'"></i></li>
         </ul>
         <div class='no-select'>
             <div class='title'>添加其他模块</div>
-            <div class='no-select-item' v-for='(item,index) in unSelectModule' :key='index'><img src='item.url'><span>{{item.text}}</span><i class="el-icon-circle-plus"></i></div>
+            <div class='no-select-item' v-for='(item,index) in unSelectModule' :key='index'><i :class='"fa fa-"+item.url'></i><span>{{item.text}}</span><i class="el-icon-circle-plus"></i></div>
         </div>
     </div>
 </template>
@@ -19,54 +19,54 @@ export default {
             selectedModule: [
                 {
                     text: '基本信息',
-                    url: '',
+                    url: 'user-circle-o',
                     isImportant: true
                 },{
                     text: '求职意向',
-                    url: '',
+                    url: 'file-text-o',
                     isImportant: false
                 },{
                     text: '教育背景',
-                    url: '',
+                    url: 'university',
                     isImportant: false
                 },{
-                    text: '实现经验',
-                    url: '',
+                    text: '实习经验',
+                    url: 'id-badge',
                     isImportant: false
                 },{
                     text: '荣誉奖项',
-                    url: '',
+                    url: 'trophy',
                     isImportant: false
                 },{
                     text: '自我评价',
-                    url: '',
+                    url: 'thumbs-o-up',
                     isImportant: false
                 },{
                     text: '个人技能',
-                    url: '',
+                    url: 'star',
                     isImportant: false
                 }
             ],
             unSelectModule: [
                 {
                     text: '工作经验',
-                    url: ''
+                    url: 'briefcase'
                 },{
                     text: '项目经验',
-                    url: ''
+                    url: 'cubes'
                 },{
                     text: '个人作品',
-                    url: ''
+                    url: 'th-large'
                 },{
                     text: '自愿者经历',
-                    url: ''
+                    url: 'users'
                 },{
-                    text: '兴趣爱好',
-                    url: ''
+                    text: '个人标签',
+                    url: 'tags'
                 },
                 {
                     text: '自定义模块',
-                    url: ''
+                    url: 'microchip'
                 }
             ]
         }
@@ -126,12 +126,24 @@ export default {
             &:last-child{
                 margin-bottom: 0;
             }
-            img{
+            .fa{
+                transform: translate(0,0);
+                position: static;
+                box-sizing: border-box;
                 display: inline-block;
                 vertical-align: middle;
-                width: 25px;
-                height: 25px;
+                width: 26px;
+                height: 26px;
                 margin-right: 10px;
+                color: #909399;
+                line-height: 26px;
+                border-radius: 13px;
+                border: 1px solid #909399;
+                font-size: 0.80rem;
+                text-align: center;
+                &:hover{
+                    color: #909399;
+                }
             }
             span{
                 display: inline-block;
@@ -170,12 +182,22 @@ export default {
             &:last-child{
                 margin-bottom: 0;
             }
-            img{
+            .fa{
+                transform: translate(0,0);
+                position: static;
+                box-sizing: border-box;
                 display: inline-block;
                 vertical-align: middle;
-                width: 25px;
-                height: 25px;
+                width: 26px;
+                height: 26px;
                 margin-right: 10px;
+                color: #909399;
+                line-height: 26px;
+                border-radius: 13px;
+                border: 1px solid #909399;
+                font-size: 0.80rem;
+                text-align: center;
+                
             }
             span{
                 display: inline-block;
