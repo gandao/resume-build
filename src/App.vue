@@ -30,7 +30,7 @@ export default {
       z-index: 9999;
       width: 100%;
       border-bottom: 1px solid #E4E7ED;
-      box-shadow: 1px 1px 3px #EBEEF5,-1px -1px  3px #EBEEF5;
+      // box-shadow: 1px 1px 3px #EBEEF5,-1px -1px  3px #EBEEF5;
       background-color: #fff;
     }
     &>.el-main{
