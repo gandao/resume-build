@@ -68,8 +68,10 @@
                         <i class='fa fa-pencil'></i>
                     </div>
                 </div>
-                <ul>
-                    <li 
+                <ul ref='rightContentUl'>
+                    <li @dragstart='dragstart($event,index)'
+                        @dragover='dragover'
+                        @drop='drop($event,index)'
                         :style="{
                             paddingTop:resumeData.style.moduleSize,
                             paddingBottom: resumeData.style.moduleSize,
@@ -113,7 +115,7 @@
                         </div>
                         <div class='edit-btn'>
                             <i class='fa fa-trash-o'></i>                
-                            <i class='fa fa-arrows'></i>
+                            <i @mousedown='setDrag(index)' class='fa fa-arrows'></i>
                             <i class='fa fa-pencil'></i>
                         </div>
                     </li>
@@ -128,6 +130,23 @@ export default {
     return {
       data: []
     };
+  },
+  methods: {
+    dragstart(e, start) {
+      e.dataTransfer.setData("start", start);
+    },
+    drop(e, end) {
+      let payload = { end, type: "move" };
+      payload.start = parseInt(e.dataTransfer.getData("start"));
+      this.$store.commit(payload);
+      this.$refs.rightContentUl.children[end].setAttribute("draggable", false);
+    },
+    dragover(e) {
+      e.preventDefault();
+    },
+    setDrag(index) {
+      this.$refs.rightContentUl.children[index].setAttribute("draggable", true);
+    }
   },
   computed: {
     resumeData() {
@@ -241,9 +260,9 @@ export default {
         .other-content-item {
           position: relative;
           box-sizing: border-box;
-          border: 1px dashed rgba(0, 0, 0, 0);
+          border: 1px dashed rgba(207, 207, 0,0);
           &:hover {
-            border: 1px dashed #00c091;
+            border: 1px dashed rgb(207, 207, 207);
             .edit-btn {
               display: block;
             }

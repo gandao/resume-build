@@ -2,7 +2,7 @@ export default {
     resumeType: 0,
     name: '简历',
     style: {
-        color: 'red',
+        color: '#DA180F',
         fontSize: '15px',
         fontFamliy: '微软雅黑',
         moduleSize: '20px',
