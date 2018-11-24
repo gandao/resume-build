@@ -28,7 +28,7 @@ export default {
     }
 }
 </script>
-<style lang="less" scoped>
+<style lang="less">
 #change-template{
     max-height: 100%;
     overflow: hidden;

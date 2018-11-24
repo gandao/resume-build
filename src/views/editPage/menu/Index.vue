@@ -41,15 +41,22 @@ export default {
             var eprnstr = "</object>"
 
             // 切除标签以外的东西
-            var prnhtml = bdhtml.substr(bdhtml.indexOf(sprnstr) + 58)
+            var prnhtml = bdhtml.substr(bdhtml.indexOf(sprnstr) + 42)
             prnhtml = prnhtml.substring(0,prnhtml.indexOf(eprnstr))
+
             // 替换body的内容
-            // console.log(prnhtml)
             window.document.body.innerHTML = prnhtml
+
+            // 设置分页
+            let height = window.document.body.children[0].clientHeight
+            height = 1160 * parseInt(height / 1160) + (height % 1160 !== 0 ? 1160 : 0) 
+            window.document.body.children[0].style.height = height + 'px'
+
+            // 打印
             window.print()
-            // // 将页面重新改回原始样式
+            // 将页面重新改回原始样式
             window.document.body.innerHTML = bdhtml
-            // // // 此处是业务需要 由于有动态生成数据 直接返回样式会乱 所以手动刷新了一下
+            // 此处是业务需要 由于有动态生成数据 直接返回样式会乱 所以手动刷新了一下
             window.location.reload()
 
         },
@@ -68,7 +75,7 @@ export default {
     }
 }
 </script>
-<style lang="less" scoped>
+<style lang="less" >
 #aside-menu{
     position: relative;
     height: 100%;

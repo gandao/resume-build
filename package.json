@@ -43,7 +43,8 @@
       "no-self-assign": 0,
       "semi-spacing": 0,
       "no-trailing-spaces": 0,
-      "semi": 0
+      "semi": 0,
+      "comma-style": 0
     },
     "parserOptions": {
       "parser": "babel-eslint"

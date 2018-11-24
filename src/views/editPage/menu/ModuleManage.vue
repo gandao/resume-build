@@ -4,11 +4,11 @@
             <div @click="onHandleClose"><i class="el-icon-arrow-left"></i>关闭</div>
         </div>
         <ul class='selected'>
-            <li v-for='(item,index) in selectedModule' :key='index'><i :class='"fa fa-"+item.url'></i><span>{{item.text}}</span><i :class="item.isImportant?'el-icon-warning':'el-icon-remove'"></i></li>
+            <li v-for='(item,index) in selectedModule' :key='index'><i :class='"fa fa-"+item.url'></i><span>{{item.text}}</span><i @click="removeModule(item.text)" :class="item.text==='基本信息'?'el-icon-warning':'el-icon-remove'"></i></li>
         </ul>
         <div class='no-select'>
             <div class='title'>添加其他模块</div>
-            <div class='no-select-item' v-for='(item,index) in unSelectModule' :key='index'><i :class='"fa fa-"+item.url'></i><span>{{item.text}}</span><i class="el-icon-circle-plus"></i></div>
+            <div class='no-select-item' v-for='(item,index) in unSelectModule' :key='index'><i :class='"fa fa-"+item.url'></i><span>{{item.text}}</span><i @click="addModule(item.text)" class="el-icon-circle-plus"></i></div>
         </div>
     </div>
 </template>
@@ -16,57 +16,149 @@
 export default {
     data() {
         return {
-            selectedModule: [
+            modules: [
                 {
-                    text: '基本信息',
-                    url: 'user-circle-o',
-                    isImportant: true
-                },{
                     text: '求职意向',
-                    url: 'file-text-o',
-                    isImportant: false
+                    url: 'file-text-o'
                 },{
                     text: '教育背景',
-                    url: 'university',
-                    isImportant: false
+                    url: 'university'
                 },{
-                    text: '实习经验',
-                    url: 'id-badge',
-                    isImportant: false
+                    text: '实习经历',
+                    url: 'id-badge'
                 },{
                     text: '荣誉奖项',
-                    url: 'trophy',
-                    isImportant: false
+                    url: 'trophy'
                 },{
                     text: '自我评价',
-                    url: 'thumbs-o-up',
-                    isImportant: false
+                    url: 'thumbs-o-up'
                 },{
                     text: '个人技能',
-                    url: 'star',
-                    isImportant: false
-                }
-            ],
-            unSelectModule: [
-                {
-                    text: '工作经验',
-                    url: 'briefcase'
+                    url: 'star'
                 },{
-                    text: '项目经验',
-                    url: 'cubes'
+                    text: '工作经历',
+                    url: 'briefcase'
                 },{
                     text: '个人作品',
                     url: 'th-large'
                 },{
-                    text: '自愿者经历',
+                    text: '志愿者经历',
                     url: 'users'
                 },{
                     text: '个人标签',
                     url: 'tags'
-                },
+                },{
+                    text: '项目经验',
+                    url: 'cubes'
+                }
+            ],
+            modulesMessage: [
                 {
-                    text: '自定义模块',
-                    url: 'microchip'
+                    text: '工作经历',
+                    url: 'briefcase ',
+                    data: [
+                        {
+                            time: '填写时间',
+                            organization: '填写公司名称',
+                            position: '填写职位名称',
+                            desc: '详细描述你的职责范围，工作任务及取得的成绩，工作经验的时间采取倒叙形式，最近经历写在前面，描述尽量具体简洁，工作经验的描述与目标岗位的招聘要求尽量匹配，用词精确。'
+                        }
+                    ]
+                },{
+                    text: '自我评价',
+                    url: 'thumbs-o-up',
+                    desc: '篇幅不要太长，注意简历整体的美观度，应该使用精确简洁的词语表达出自己的长处和优势，切勿夸大其词。'
+                },{
+                    text: '实习经历',
+                    url: 'id-badge',
+                    data: [
+                        {
+                            time: '填写时间',
+                            organization: '填写公司名称',
+                            position: '填写职位名称',
+                            desc: '根据实际情况选择，实习经验的时间采取倒叙形式，最近经历写在前面，实现经验的描述与岗位的招聘要求尽量匹配，用词精确，实习成果尽量以数据来呈现，突出个人成果以及做出的贡献，描述尽量具体简洁。'
+                        }
+                    ]
+                },{
+                    text: '个人技能',
+                    url: 'star',
+                    data: ['简洁的填写个人技能']
+                },{
+                    text: '个人标签',
+                    url: 'tags',
+                    data: ['旅游','健身','游戏','动漫','摄影']
+                },{
+                    text: '求职意向',
+                    url: 'file-text-o',
+                    data: [
+                        {
+                            name: '岗位意向',
+                            text: '岗位意向',
+                            url: 'briefcase'
+                        }, {
+                            name: '意向城市',
+                            text: '意向城市',
+                            url: 'building'
+                        }, {
+                            name: '薪资要求',
+                            text: '薪资要求',
+                            url: 'money'
+                        }, {
+                            name: '入职时间',
+                            text: '入职时间',
+                            url: 'calendar'
+                        }
+                    ]
+                },{
+                    text: '教育背景',
+                    url: 'university',
+                    data: [
+                        {
+                            time: '填写时间',
+                            organization: '填写大学名称',
+                            position: '填写专业名称',
+                            desc: '尽量简洁,突出重点，成绩优异的话题写上GPA及排名等信息，如GPA: 3.72/4(专业前十) GRE: 324'
+                        }
+                    ]
+                },{
+                    text: '荣誉奖项',
+                    url: 'trophy',
+                    data: [
+                        {
+                            time: '填写时间',
+                            name: '填写奖项名称',
+                            lever: '填写奖项等级'
+                        }
+                    ]
+                },{
+                    text: '项目经验',
+                    url: 'cubes',
+                    data: [
+                        {
+                            time: '填写时间',
+                            organization: '填写项目名称',
+                            position: '填写角色名称',
+                            desc: '描述你参加项目负责的工作内容，内容清晰，突出重点，如项目描述、项目职责、项目业绩。'
+                        }
+                    ]
+                },{
+                    text: '志愿者经历',
+                    url: 'users',
+                    data: [
+                        {
+                            time: '填写时间',
+                            organization: '填写活动名称',
+                            position: '填写角色名称',
+                            desc: '根据实际情况选择，如果你的工作经验略显单薄，那么自愿者经验规则能够帮助你在有限的条件下丰富你的简历，使你距离名企更进一步。'
+                        }
+                    ]
+                },{
+                    text: '个人作品',
+                    url: 'th-large',
+                    data: [{
+                        text: '填写作品名称',
+                        url: '填写地址'
+                    }]
                 }
             ]
         }
@@ -74,11 +166,79 @@ export default {
     methods: {
         onHandleClose() {
             this.$emit('onClose')
+        },
+        removeModule(text) {
+            // 特殊情况判断
+            if (text === '基本信息') {
+                return;
+            }
+            // confirm
+            this.$confirm('是否确定删除该模块?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+            }).then(() => {
+                let payload = { type: 'remove', text };
+                this.$store.commit(payload);
+                this.$notify({
+                    title: '成功',
+                    message: '删除成功！',
+                    type: 'success',
+                    offset: 100,
+                    duration: 1000
+                });
+            })
+        },
+        addModule(text) {
+            for (var i = 0;i < this.modulesMessage.length;i++) {
+                if (text === this.modulesMessage[i].text) {
+                    let payload = {
+                        type: 'addModule',
+                        data: this.modulesMessage[i]
+                    }
+                    this.$store.commit(payload);
+                    this.$store.commit('changeScrollTop');
+                    break
+                }
+            }
+        }
+    },
+    computed: {
+        selectedModule() {
+            let selctedData = this.$store.state.resume.content;
+            let selected = [];
+            selected.push({
+                    text: '基本信息',
+                    url: 'user-circle-o'
+            });
+            for (let { text, url } of selctedData.mainContent) {
+                selected.push({ text, url });
+            }
+            for (let { text, url } of selctedData.otherContent) {
+                selected.push({ text, url });
+            }
+            return selected
+        },
+        unSelectModule() {
+            let unSelect = this.modules.concat();
+            for (var i = 0;i < this.selectedModule.length;i++) {
+                for (var j = 0;j < unSelect.length;j++) {
+                    if (this.selectedModule[i].text === unSelect[j].text) {
+                        unSelect.splice(j,1);
+                        break;
+                    }
+                }
+            }
+            unSelect.push({
+                text: '自定义模块',
+                url: 'microchip'
+            })
+            return unSelect;
         }
     }
 }
 </script>
-<style lang="less" scoped>
+<style lang="less">
 #module-manage{
     position: absolute;
     top: 0;
@@ -135,14 +295,14 @@ export default {
                 width: 26px;
                 height: 26px;
                 margin-right: 10px;
-                color: #909399;
+                color: #409EFF;
                 line-height: 26px;
                 border-radius: 13px;
-                border: 1px solid #909399;
+                border: 1px solid #409EFF;
                 font-size: 0.80rem;
                 text-align: center;
                 &:hover{
-                    color: #909399;
+                    color: #409EFF;
                 }
             }
             span{
@@ -158,7 +318,7 @@ export default {
                 font-size:1rem;
                 color:#909399;
                 &:hover {
-                    color: #d81e06;
+                    color: #409EFF;
                 }
             }
         }

@@ -1,6 +1,6 @@
 <template>
-    <object id='resume'>
-        <div class='resume-item'>
+    <object class='resume'>
+        <div ref='resume' class='resume-item'>
             <div class='left-content' :style="'background: ' + resumeData.style.color">
                 <div class='avatar'>
                     <img src='./avatar.jpg' />
@@ -49,7 +49,7 @@
                             <div class='other' v-else>{{item.desc}}</div>
                         </div>
                         <div class='edit-btn'>
-                            <i class='fa fa-trash-o'></i>                
+                            <i @click="removeContent(item.text)" class='fa fa-trash-o'></i>             
                             <i class='fa fa-arrows'></i>
                             <i class='fa fa-pencil'></i>
                         </div>
@@ -103,10 +103,10 @@
                                 <span class='lever'>{{item1.lever}}</span>
                             </div>
                         </div>
-                        <div class='main-messgae' v-else-if='item.text==="工作经历" || item.text==="项目经验" || item.text==="实习经历"||item.text==="自愿者经历" || item.text==="在校职位" || item.text==="教育背景"'>
+                        <div class='main-messgae' v-else-if='item.text==="工作经历" || item.text==="项目经验" || item.text==="实习经历"||item.text==="志愿者经历" || item.text==="在校职位" || item.text==="教育背景"'>
                             <div v-for='(item1,index1) in item.data' :key='index1'>
-                                <div class='title-wrapper'><span class='time'>{{item1.time}}</span><span class="organization">{{item1.organization}}</span></div>
-                                <div class='position'>{{item1.position}}</div>
+                                <div :style="{fontSize: resumeData.style.fontSize}" class='title-wrapper'><span class='time'>{{item1.time}}</span><span class="organization">{{item1.organization}}</span></div>
+                                <div :style="{fontSize: resumeData.style.fontSize}"  class='position'>{{item1.position}}</div>
                                 <div :style="{fontSize: resumeData.style.fontSize,lineHeight: resumeData.style.lineHeight}" class='desc'>{{item1.desc}}</div>
                             </div>
                         </div>
@@ -114,7 +114,7 @@
                             <div class='desc'>{{item.desc}}</div>
                         </div>
                         <div class='edit-btn'>
-                            <i class='fa fa-trash-o'></i>                
+                            <i @click="removeContent(item.text)" class='fa fa-trash-o'></i>                
                             <i @mousedown='setDrag(index)' class='fa fa-arrows'></i>
                             <i class='fa fa-pencil'></i>
                         </div>
@@ -140,12 +140,36 @@ export default {
       payload.start = parseInt(e.dataTransfer.getData("start"));
       this.$store.commit(payload);
       this.$refs.rightContentUl.children[end].setAttribute("draggable", false);
+      this.$notify({
+            title: '成功',
+            message: '移动成功！',
+            type: 'success',
+            offset: 100,
+            duration: 1000
+        });
     },
     dragover(e) {
       e.preventDefault();
     },
     setDrag(index) {
       this.$refs.rightContentUl.children[index].setAttribute("draggable", true);
+    },
+    removeContent(text) {
+        this.$confirm('是否确定删除该模块?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+            let payload = { type: 'remove', text };
+            this.$store.commit(payload);
+            this.$notify({
+                title: '成功',
+                message: '删除成功！',
+                type: 'success',
+                offset: 100,
+                duration: 1000
+            });
+        })
     }
   },
   computed: {
@@ -155,18 +179,13 @@ export default {
   }
 };
 </script>
-<style lang="less" scoped>
-#resume {
-  display: block;
+<style lang="less" >
   .resume-item {
     position: relative;
-    box-sizing: border-box;
     width: 820px;
     min-width: 820px;
     min-height: 1160px;
     margin: 0 auto;
-    margin-top: 30px;
-    margin-bottom: 30px;
     border: 1px solid #e4e7ed;
     box-shadow: 2px 2px 8px #ebeef5, -2px -2px 8px #ebeef5;
     font-size: 1.3rem;
@@ -381,7 +400,6 @@ export default {
           }
         }
         .main-messgae {
-          font-size: 1rem;
           line-height: 22px;
           .title-wrapper {
             position: relative;
@@ -425,5 +443,4 @@ export default {
       }
     }
   }
-}
 </style>

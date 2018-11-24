@@ -99,7 +99,7 @@ export default {
     }
 }
 </script>
-<style lang="less" scoped>
+<style lang="less">
 #style-setting{
     box-sizing: border-box;
     padding: 0 25px;

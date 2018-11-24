@@ -1,8 +1,8 @@
 <template>
-    <div id='edit-page'>
+    <div  id='edit-page'>
         <el-container>
             <el-aside width='250px'><Menu /></el-aside>
-            <el-main><Resume /></el-main>
+            <el-main ref='mainContent'><Resume /></el-main>
         </el-container>
     </div>
 </template>
@@ -10,6 +10,25 @@
 import Menu from './menu/Index.vue'
 import Resume from './resume/Resume.vue'
 export default {
+  computed: {
+      scrollTop() {
+          return this.$store.state.resume.scrollTop;
+      }
+  },
+  watch: {
+      scrollTop() {
+          let line = 15;
+          let scrollTop = this.$refs.mainContent.$el.scrollTop;
+          let timer = setInterval(() => {
+                scrollTop += line;
+                this.$refs.mainContent.$el.scrollTo(0,scrollTop);
+          },8);
+
+          setTimeout(() => {
+              clearInterval(timer);
+          },800);
+      }
+  },
   components: {
     Menu,
     Resume

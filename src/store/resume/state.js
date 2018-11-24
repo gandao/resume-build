@@ -103,30 +103,6 @@ export default {
                 ]
             },
             {
-                text: '工作经历',
-                url: 'briefcase ',
-                data: [
-                    {
-                        time: '填写时间',
-                        organization: '填写公司名称',
-                        position: '填写职位名称',
-                        desc: '详细描述你的职责范围，工作任务及取得的成绩，工作经验的时间采取倒叙形式，最近经历写在前面，描述尽量具体简洁，工作经验的描述与目标岗位的招聘要求尽量匹配，用词精确。'
-                    }
-                ]
-            },
-            {
-                text: '项目经验',
-                url: 'cubes',
-                data: [
-                    {
-                        time: '填写时间',
-                        organization: '填写项目名称',
-                        position: '填写角色名称',
-                        desc: '描述你参加项目负责的工作内容，内容清晰，突出重点，如项目描述、项目职责、项目业绩。'
-                    }
-                ]
-            },
-            {
                 text: '实习经历',
                 url: 'id-badge',
                 data: [
@@ -157,5 +133,6 @@ export default {
                     }
                 ]
             }]
-    }
+    },
+    scrollTop: true
 }
