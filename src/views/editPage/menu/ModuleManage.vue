@@ -10,9 +10,11 @@
             <div class='title'>添加其他模块</div>
             <div class='no-select-item' v-for='(item,index) in unSelectModule' :key='index'><i :class='"fa fa-"+item.url'></i><span>{{item.text}}</span><i @click="addModule(item.text)" class="el-icon-circle-plus"></i></div>
         </div>
+        <CustomDlg @customDlgColse='customDlgColse'  :isShow='isCustomDlgShow' />
     </div>
 </template>
 <script>
+import CustomDlg from '../../../components/dialog/CustomDlg'
 export default {
     data() {
         return {
@@ -39,9 +41,6 @@ export default {
                     text: '工作经历',
                     url: 'briefcase'
                 },{
-                    text: '个人作品',
-                    url: 'th-large'
-                },{
                     text: '志愿者经历',
                     url: 'users'
                 },{
@@ -56,6 +55,7 @@ export default {
                 {
                     text: '工作经历',
                     url: 'briefcase ',
+                    type: 1,
                     data: [
                         {
                             time: '填写时间',
@@ -67,10 +67,12 @@ export default {
                 },{
                     text: '自我评价',
                     url: 'thumbs-o-up',
+                    type: 3,
                     desc: '篇幅不要太长，注意简历整体的美观度，应该使用精确简洁的词语表达出自己的长处和优势，切勿夸大其词。'
                 },{
                     text: '实习经历',
                     url: 'id-badge',
+                    type: 1,
                     data: [
                         {
                             time: '填写时间',
@@ -82,14 +84,17 @@ export default {
                 },{
                     text: '个人技能',
                     url: 'star',
+                    type: 5,
                     data: ['简洁的填写个人技能']
                 },{
                     text: '个人标签',
                     url: 'tags',
+                    type: 4,
                     data: ['旅游','健身','游戏','动漫','摄影']
                 },{
                     text: '求职意向',
                     url: 'file-text-o',
+                    type: 0,
                     data: [
                         {
                             name: '岗位意向',
@@ -112,6 +117,7 @@ export default {
                 },{
                     text: '教育背景',
                     url: 'university',
+                    type: 1,
                     data: [
                         {
                             time: '填写时间',
@@ -123,6 +129,7 @@ export default {
                 },{
                     text: '荣誉奖项',
                     url: 'trophy',
+                    type: 2,
                     data: [
                         {
                             time: '填写时间',
@@ -133,6 +140,7 @@ export default {
                 },{
                     text: '项目经验',
                     url: 'cubes',
+                    type: 1,
                     data: [
                         {
                             time: '填写时间',
@@ -144,6 +152,7 @@ export default {
                 },{
                     text: '志愿者经历',
                     url: 'users',
+                    type: 1,
                     data: [
                         {
                             time: '填写时间',
@@ -152,15 +161,9 @@ export default {
                             desc: '根据实际情况选择，如果你的工作经验略显单薄，那么自愿者经验规则能够帮助你在有限的条件下丰富你的简历，使你距离名企更进一步。'
                         }
                     ]
-                },{
-                    text: '个人作品',
-                    url: 'th-large',
-                    data: [{
-                        text: '填写作品名称',
-                        url: '填写地址'
-                    }]
-                }
-            ]
+                } 
+            ],
+            isCustomDlgShow: false
         }
     },
     methods: {
@@ -173,12 +176,32 @@ export default {
                 return;
             }
             // confirm
+            let isMain = false
+            let idx = -1;
+            let selctedData = this.$store.state.resume.content;
+
+            for (var i = 0;i < selctedData.otherContent.length;i++) {
+                if (selctedData.otherContent[i].text === text) {
+                    idx = i
+                    break
+                }
+            }
+            if (idx === -1) {
+                for (i = 0;i < selctedData.mainContent.length;i++) {
+                    if (selctedData.mainContent[i].text === text) {
+                        idx = i
+                        isMain = true
+                        break
+                    }
+                }
+            }
+
             this.$confirm('是否确定删除该模块?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
             }).then(() => {
-                let payload = { type: 'remove', text };
+                let payload = { type: 'remove', isMain, idx };
                 this.$store.commit(payload);
                 this.$notify({
                     title: '成功',
@@ -190,6 +213,10 @@ export default {
             })
         },
         addModule(text) {
+            if (text === '自定义模块') {
+                this.isCustomDlgShow = true
+                return
+            }
             for (var i = 0;i < this.modulesMessage.length;i++) {
                 if (text === this.modulesMessage[i].text) {
                     let payload = {
@@ -201,6 +228,9 @@ export default {
                     break
                 }
             }
+        },
+        customDlgColse() {
+            this.isCustomDlgShow = false
         }
     },
     computed: {
@@ -235,6 +265,9 @@ export default {
             })
             return unSelect;
         }
+    },
+    components: {
+        CustomDlg
     }
 }
 </script>
@@ -244,11 +277,10 @@ export default {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
     min-height: 100%;
     background: rgb(240, 240, 240);
     color:#303133;
-    font-size: 0.83rem;
+    font-size: 0.8rem;
     .setting-off{
         position: relative;
         font-size: 1.1rem;
@@ -276,7 +308,7 @@ export default {
         padding: 15px 0;
         li {
             position: relative;
-            line-height: 35px;
+            line-height: 32px;
             padding-left: 45px;
             padding-right: 20px;
             cursor: pointer;
@@ -292,12 +324,12 @@ export default {
                 box-sizing: border-box;
                 display: inline-block;
                 vertical-align: middle;
-                width: 26px;
-                height: 26px;
-                margin-right: 10px;
+                width: 24px;
+                height: 24px;
+                margin-right: 15px;
                 color: #409EFF;
-                line-height: 26px;
-                border-radius: 13px;
+                line-height: 24px;
+                border-radius: 12px;
                 border: 1px solid #409EFF;
                 font-size: 0.80rem;
                 text-align: center;
@@ -310,6 +342,7 @@ export default {
                 vertical-align: middle;
             }
             i {
+                box-sizing: border-box;
                 position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
@@ -332,7 +365,7 @@ export default {
         }
         .no-select-item{
             position: relative;
-            line-height: 35px;
+            line-height: 32px;
             padding-left: 45px;
             padding-right: 20px;
             cursor: pointer;
@@ -348,12 +381,12 @@ export default {
                 box-sizing: border-box;
                 display: inline-block;
                 vertical-align: middle;
-                width: 26px;
-                height: 26px;
-                margin-right: 10px;
+                width: 24px;
+                height: 24px;
+                margin-right: 14px;
                 color: #909399;
-                line-height: 26px;
-                border-radius: 13px;
+                line-height: 24px;
+                border-radius: 12px;
                 border: 1px solid #909399;
                 font-size: 0.80rem;
                 text-align: center;

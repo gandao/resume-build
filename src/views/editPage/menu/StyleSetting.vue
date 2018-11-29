@@ -11,7 +11,7 @@
         </div>
         <div class='font-setting'>
             <div class='title'>{{'字体: ' + font}}</div>
-            <el-select  size='mini'  v-model="value" placeholder="请选择">
+            <el-select  size='mini'  v-model="fontSize" placeholder="请选择">
                 <el-option
                     v-for="item in options"
                     :key="item"
@@ -31,9 +31,9 @@
         </div>
         <div class='text-setting'>
             <div class='title'>行间距</div>
-            <el-slider v-model="lineHeight" max='40' :step="2"></el-slider>
+            <el-slider v-model="lineHeight" :min='15' :max='40'  :step="2"></el-slider>
             <div class='title title1' >模块间距</div>
-            <el-slider v-model="moduleSize"  max='40' :step="2"></el-slider>
+            <el-slider v-model="moduleSize" :min='10' :max='40' :step="2"></el-slider>
         </div>
         <div class='default-setting'>
             <div class='defalut-btn'>恢复默认设置<i class='el-icon-refresh'></i></div>
@@ -47,7 +47,7 @@ export default {
         return {
             options: ['12','13','14','15','16','17','18'],
             color: ['#0B70BD','#254665','#00C091','#FF7171','#37B754',
-                    '#00C091','#EE7000','#A29177','#DA180F','#6B4B24',
+                    '#E6A23C','#EE7000','#A29177','#DA180F','#6B4B24',
                     '#648BB3','#597404','#9D57CA','#D4BA38','#69CC41'],
             font: '微软雅黑'
  

@@ -14,13 +14,22 @@ export default {
             url: 'user-circle-o',
             avatar: '',
             name: {
+                name: '姓名',
                 text: '小明',
                 url: 'user-o'
             },
             desc: {
+                name: '个人描述',
                 text: '一句话介绍自己，告诉HR为什么选择你而不是选择别人。',
                 url: ''
             },
+            // 用户自定义字段
+            custom: [{
+                name: '学历',
+                text: '本科',
+                url: 'graduation-cap'
+            }],
+            // 必填字段
             data: [
                 {
                     name: '学历',
@@ -54,22 +63,27 @@ export default {
         },
         otherContent: [
             {
+                type: 5,
                 text: '个人技能',
                 url: 'star',
                 data: ['熟悉ajax和jQuery','熟悉HTTP请求和网络原理','了解ES5/ES6，对原型、闭包、作用域有自己的理解']
             }, {
+                type: 4,
                 text: '个人标签',
                 url: 'tags',
                 data: ['旅游','健身','游戏','动漫','摄影']
             }, {
                 text: '自定义模块',
-                url: 'microchip'
+                type: 3,
+                url: 'microchip',
+                data: '本人有审美强迫症、喜爱新鲜事物，有很强的自检的能力；有较强的独立学习和解决问题的能力，自觉性比较高，能够合理规划时间与协作分工。'
             }
         ],
         mainContent: [
             {
                 text: '求职意向',
                 url: 'file-text-o',
+                type: 0,
                 data: [
                     {
                         name: '岗位意向',
@@ -93,6 +107,7 @@ export default {
             {
                 text: '教育背景',
                 url: 'university',
+                type: 1,
                 data: [
                     {
                         time: '填写时间',
@@ -105,6 +120,7 @@ export default {
             {
                 text: '实习经历',
                 url: 'id-badge',
+                type: 1,
                 data: [
                     {
                         time: '填写时间',
@@ -114,12 +130,14 @@ export default {
                     }
                 ]
             },{
+                type: 3,
                 text: '自我评价',
                 url: 'thumbs-o-up',
-                desc: '本人有审美强迫症、喜爱新鲜事物，有很强的自检的能力；有较强的独立学习和解决问题的能力，自觉性比较高，能够合理规划时间与协作分工。'
+                data: '本人有审美强迫症、喜爱新鲜事物，有很强的自检的能力；有较强的独立学习和解决问题的能力，自觉性比较高，能够合理规划时间与协作分工。'
             },{
                 text: '荣誉奖项',
                 url: 'trophy',
+                type: 2,
                 data: [
                     {
                         time: '2018',
@@ -132,6 +150,16 @@ export default {
                         lever: '国级'
                     }
                 ]
+            },{
+                type: 5,
+                text: '个人技能',
+                url: 'star',
+                data: ['熟悉ajax和jQuery','熟悉HTTP请求和网络原理','了解ES5/ES6，对原型、闭包、作用域有自己的理解']
+            }, {
+                type: 4,
+                text: '个人标签',
+                url: 'tags',
+                data: ['旅游','健身','游戏','动漫','摄影']
             }]
     },
     scrollTop: true

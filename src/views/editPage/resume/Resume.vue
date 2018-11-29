@@ -17,16 +17,24 @@
                     </div>
                     <div :style="{fontSize: resumeData.style.fontSize}" class='baseMessage-content'>
                         <div class='baseMessage-content-item' v-for="(item,index) in resumeData.content.baseMessage.data" :key='index'>
-                            <i  :class='"fa fa-"+item.url'></i>
+                            <i :class='"fa fa-"+item.url'></i>
+                            <span>{{item.text}}</span>
+                        </div>
+                        <div class='baseMessage-content-item' v-for="(item,index) in resumeData.content.baseMessage.custom" :key='index+resumeData.content.baseMessage.data.length'>
+                            <i :class='"fa fa-"+item.url'></i>
                             <span>{{item.text}}</span>
                         </div>
                     </div>
                     <div class='edit-btn'>
-                        <i class='fa fa-pencil'></i>
+                        <i @click="isBaseMessageDlgShow=true" class='fa fa-pencil'></i>
                     </div>
                 </div>
                 <ul class='other-content'>
                     <li 
+                        @dragstart='dragStartOther($event,index,item.type)'
+                        @dragover='dragover'
+                        @drop='dropOther($event,index)'
+                        draggable=true
                         :style="{
                             paddingTop:resumeData.style.moduleSize,
                             paddingBottom: resumeData.style.moduleSize,
@@ -40,18 +48,20 @@
                             <span>{{item.text}}</span>
                         </div>
                         <div :style="{fontSize: resumeData.style.fontSize}" class='content'>
-                            <ul class='skill' v-if='item.text==="个人技能"'>
-                                <li v-for='(item1,index1) in item.data' :key='index1'>{{item1}}</li>
+                            <ul class='skill' v-if='item.type===5'>
+                                <li :style="{lineHeight: resumeData.style.lineHeight}"  v-for='(item1,index1) in item.data' :key='index1'>{{item1}}</li>
                             </ul>
-                            <div class='tag' v-else-if='item.text==="个人标签"'>
+                            <div class='tag' v-else-if='item.type===4'>
                                 <span v-for='(item1,index1) in item.data' :key='index1'>{{item1}}</span>
                             </div>
-                            <div class='other' v-else>{{item.desc}}</div>
+                            <div :style="{fontSize: resumeData.style.fontSize,lineHeight: resumeData.style.lineHeight}" class='tag' v-else-if='item.type===3'>
+                              {{item.data}}
+                            </div>
                         </div>
                         <div class='edit-btn'>
-                            <i @click="removeContent(item.text)" class='fa fa-trash-o'></i>             
+                            <i @click="removeContent(false,index)" class='fa fa-trash-o'></i>             
                             <i class='fa fa-arrows'></i>
-                            <i class='fa fa-pencil'></i>
+                            <i @click='eidtMainContent(item.type,index,false)'  class='fa fa-pencil'></i>
                         </div>
                     </li>
                 </ul>
@@ -65,13 +75,14 @@
                     <div class='name'>{{resumeData.content.baseMessage.name.text}}</div>
                     <div :style="{fontSize: resumeData.style.fontSize,lineHeight: resumeData.style.lineHeight}" class='desc'>{{resumeData.content.baseMessage.desc.text}}</div>
                     <div class='edit-btn'>
-                        <i class='fa fa-pencil'></i>
+                        <i @click="isBaseMessageDlgShow=true" class='fa fa-pencil'></i>
                     </div>
                 </div>
                 <ul ref='rightContentUl'>
-                    <li @dragstart='dragstart($event,index)'
+                    <li @dragstart='dragStartMain($event,index,item.type)'
                         @dragover='dragover'
-                        @drop='drop($event,index)'
+                        @drop='dropMain($event,index)'
+                        draggable=true
                         :style="{
                             paddingTop:resumeData.style.moduleSize,
                             paddingBottom: resumeData.style.moduleSize,
@@ -86,7 +97,7 @@
                         <div 
                             :style="{fontSize: resumeData.style.fontSize}"
                             class='position-wanted'
-                            v-if='item.text==="求职意向"'
+                            v-if='item.type===0'
                         >
                             <span v-for='(item1,index1) in item.data' :key='index1'>
                                 <i :style="{color:  + resumeData.style.color}" :class='"fa fa-"+item1.url'></i>
@@ -95,7 +106,7 @@
                         </div>
                         <div
                             :style="{fontSize: resumeData.style.fontSize}"
-                            class='award' v-else-if='item.text==="荣誉奖项"'
+                            class='award' v-else-if='item.type===2'
                         >
                             <div v-for='(item1,index1) in item.data' :key='index1'>
                                 <span class='time'>{{item1.time}}</span>
@@ -103,50 +114,98 @@
                                 <span class='lever'>{{item1.lever}}</span>
                             </div>
                         </div>
-                        <div class='main-messgae' v-else-if='item.text==="工作经历" || item.text==="项目经验" || item.text==="实习经历"||item.text==="志愿者经历" || item.text==="在校职位" || item.text==="教育背景"'>
-                            <div v-for='(item1,index1) in item.data' :key='index1'>
+                        <div class='main-messgae' v-else-if='item.type===1'>
+                            <div class='main-messgae-item' v-for='(item1,index1) in item.data' :key='index1'>
                                 <div :style="{fontSize: resumeData.style.fontSize}" class='title-wrapper'><span class='time'>{{item1.time}}</span><span class="organization">{{item1.organization}}</span></div>
                                 <div :style="{fontSize: resumeData.style.fontSize}"  class='position'>{{item1.position}}</div>
                                 <div :style="{fontSize: resumeData.style.fontSize,lineHeight: resumeData.style.lineHeight}" class='desc'>{{item1.desc}}</div>
                             </div>
                         </div>
-                        <div class='other-message' v-else>
-                            <div class='desc'>{{item.desc}}</div>
+                        <div class='other-message' v-else-if='item.type===3'>
+                            <div  :style="{fontSize: resumeData.style.fontSize,lineHeight: resumeData.style.lineHeight}"  class='desc'>{{item.data}}</div>
+                        </div>
+                        <ul class='skill' v-else-if ='item.type===5'>
+                                <li class='skill-item' :style="{fontSize: resumeData.style.fontSize,lineHeight: resumeData.style.lineHeight}"  v-for='(item1,index1) in item.data' :key='index1'>{{item1}}</li>
+                        </ul>
+                        <div  :style="{fontSize: resumeData.style.fontSize}" class='tag' v-else-if='item.type===4'>
+                                <span :style="{border: '1px solid'+ resumeData.style.color  }" v-for='(item1,index1) in item.data' :key='index1'>{{item1}}</span>
                         </div>
                         <div class='edit-btn'>
-                            <i @click="removeContent(item.text)" class='fa fa-trash-o'></i>                
+                            <i @click="removeContent(true,index)" class='fa fa-trash-o'></i>                
                             <i @mousedown='setDrag(index)' class='fa fa-arrows'></i>
-                            <i class='fa fa-pencil'></i>
+                            <i @click='eidtMainContent(item.type,index,true)' class='fa fa-pencil'></i>
                         </div>
                     </li>
                 </ul>
             </div>
         </div>
+        <div class='edit-dlgs'>
+          <BaseMessageDlg @baseMessageDlgColse='baseMessageDlgClose' :isShow='isBaseMessageDlgShow' />
+          <MainDlg @mainDlgColse='mainDlgColse' :isShow='isMainDlgShow' :contentIdx='mainContentIdx' />
+          <AwardDlg @awardDlgColse='awardDlgColse' :isShow='isAwardDlgShow' :contentIdx='mainContentIdx' />
+          <PositionDlg @positionDlgColse='positionDlgColse' :isShow='isPositionDlgShow' :contentIdx='mainContentIdx' />
+          <SkillDlg @skillDlgColse='skillDlgColse' :isMainContent='isMainContent' :isShow='isSkillDlgShow' :contentIdx='mainContentIdx' />
+          <OtherMessageDlg @otherMessageDlgColse='otherMessageDlgColse' :isMainContent='isMainContent' :isShow='isOtherContent' :contentIdx='mainContentIdx' />
+          <TagDlg @tagDlgColse='tagDlgColse' :isMainContent='isMainContent' :isShow='isTagshow' :contentIdx='mainContentIdx' />
+        </div>
     </object>
 </template>
 <script>
+import BaseMessageDlg from '../../../components/dialog/BaseMessageDlg.vue'
+import MainDlg from '../../../components/dialog/MainDlg.vue'
+import AwardDlg from '../../../components/dialog/AwardDlg.vue'
+import PositionDlg from '../../../components/dialog/PositionDlg.vue'
+import SkillDlg from '../../../components/dialog/SkillDlg.vue'
+import OtherMessageDlg from '../../../components/dialog/OtherMessageDlg.vue'
+import TagDlg from '../../../components/dialog/TagDlg.vue'
+
 export default {
   data() {
     return {
-      data: []
+      data: [],
+      isBaseMessageDlgShow: false,
+      isMainDlgShow: false,
+      isAwardDlgShow: false,
+      isPositionDlgShow: false,
+      isSkillDlgShow: false,
+      isOtherContent: false,
+      isTagshow: false,
+      mainContentIdx: 0,
+      isMainContent: true
     };
   },
   methods: {
-    dragstart(e, start) {
-      e.dataTransfer.setData("start", start);
+    dragStartMain(e, start,type) {
+      let data = {
+        start,
+        isMain: true,
+        type
+      }
+      JSON.stringify(data)
+      e.dataTransfer.setData("start", JSON.stringify(data));
     },
-    drop(e, end) {
+    dropMain(e, end) {
       let payload = { end, type: "move" };
-      payload.start = parseInt(e.dataTransfer.getData("start"));
-      this.$store.commit(payload);
-      this.$refs.rightContentUl.children[end].setAttribute("draggable", false);
+      let data = JSON.parse(e.dataTransfer.getData("start"));
+      if (data.isMain) {
+        payload.start = data.start
+        this.$store.commit(payload);
+      } else {        
+        payload.type = 'addModule2'
+        payload.idx = end
+        payload.isMain = !data.isMain
+        payload.data = this.resumeData.content.otherContent[data.start]
+
+        this.$store.commit({ type: 'remove', isMain: data.isMain, idx: data.start })
+        this.$store.commit(payload)
+      }
       this.$notify({
             title: '成功',
             message: '移动成功！',
             type: 'success',
             offset: 100,
             duration: 1000
-        });
+      });
     },
     dragover(e) {
       e.preventDefault();
@@ -154,13 +213,62 @@ export default {
     setDrag(index) {
       this.$refs.rightContentUl.children[index].setAttribute("draggable", true);
     },
-    removeContent(text) {
+    dragStartOther(e,start,type) {
+      let data = {
+        start,
+        isMain: false,
+        type
+      }
+      JSON.stringify(data)
+      e.dataTransfer.setData("start", JSON.stringify(data));
+    },
+    dropOther(e, end) {
+      let payload = { end, type: "otherMove" };
+      let data = JSON.parse(e.dataTransfer.getData("start"));
+      if (!data.isMain) {
+        payload.start = data.start
+        this.$store.commit(payload);
+        this.$notify({
+            title: '成功',
+            message: '移动成功！',
+            type: 'success',
+            offset: 100,
+            duration: 1000
+        });
+      } else if (data.type === 4 || data.type === 3 || data.type === 5) {        
+
+        payload.type = 'addModule2'
+        payload.idx = end
+        payload.isMain = !data.isMain
+        payload.data = this.resumeData.content.mainContent[data.start]
+
+        this.$store.commit({ type: 'remove', isMain: data.isMain, idx: data.start })
+        this.$store.commit(payload)
+
+        this.$notify({
+            title: '成功',
+            message: '移动成功！',
+            type: 'success',
+            offset: 100,
+            duration: 1000
+      });
+      } else {
+        this.$notify({
+          title: '警告',
+          message: '部分模块不能移动到其他区域',
+          type: 'warning',
+          offset: 100,
+          duration: 1000
+        });
+      }
+    },
+    removeContent(isMain,idx) {
         this.$confirm('是否确定删除该模块?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-            let payload = { type: 'remove', text };
+            let payload = { type: 'remove', isMain,idx };
             this.$store.commit(payload);
             this.$notify({
                 title: '成功',
@@ -170,12 +278,60 @@ export default {
                 duration: 1000
             });
         })
+    },
+    baseMessageDlgClose() {
+      this.isBaseMessageDlgShow = false
+    },
+    mainDlgColse() {
+      this.isMainDlgShow = false
+    },
+    awardDlgColse() {
+      this.isAwardDlgShow = false
+    },
+    positionDlgColse() {
+      this.isPositionDlgShow = false
+    },
+    skillDlgColse() {
+      this.isSkillDlgShow = false
+    },
+    otherMessageDlgColse() {
+      this.isOtherContent = false
+    },
+    tagDlgColse() {
+      this.isTagshow = false
+    },
+    eidtMainContent(type,index,isMainContent) {
+      console.log(index,isMainContent)
+      this.mainContentIdx = index
+      this.isMainContent = isMainContent
+      if (type === 1) {
+        this.isMainDlgShow = true
+      } else if (type === 2) {
+        this.isAwardDlgShow = true
+      } else if (type === 0) {
+        this.isPositionDlgShow = true
+      } else if (type === 5) {
+        this.isSkillDlgShow = true
+      } else if (type === 3) {
+        this.isOtherContent = true
+      } else if (type === 4) {
+        this.isTagshow = true
+      }
     }
   },
   computed: {
     resumeData() {
       return this.$store.state.resume;
     }
+  },
+  components: {
+    BaseMessageDlg,
+    MainDlg,
+    AwardDlg,
+    PositionDlg,
+    SkillDlg,
+    OtherMessageDlg,
+    TagDlg
   }
 };
 </script>
@@ -384,23 +540,29 @@ export default {
             color: #606266;
             font-size: 0.7rem;
             margin-right: 7px;
-            margin-bottom: 8px;
           }
-          span {
+          &>span {
             display: inline-block;
             vertical-align: middle;
-            margin-right: 20px;
-            margin-bottom: 8px;
-          }
-          &:last-child {
-            span,
-            i {
-              margin-bottom: 0;
+            margin-right: 25px;
+            margin-bottom: 10px;
+            &:last-child{
+              margin-right: 0;
+            }
+            span{
+              display: inline-block;
+              vertical-align: middle;
             }
           }
         }
         .main-messgae {
           line-height: 22px;
+          .main-messgae-item{
+            margin-bottom: 15px;
+            &:last-child{
+              margin-bottom: 0;
+            }
+          }
           .title-wrapper {
             position: relative;
             margin-bottom: 5px;
@@ -425,12 +587,15 @@ export default {
           line-height: 22px;
         }
         .award {
-          & > div {
+          &>div {
             position: relative;
             margin: 15px 0;
           }
+          .time{
+            display: inline-block;
+            width: 120px;
+          }
           .name {
-            margin-left: 50px;
             font-weight: 700;
           }
           .lever {
@@ -438,6 +603,24 @@ export default {
             top: 0;
             right: 0;
             font-weight: 700;
+          }
+        }
+        .skill {
+          .skill-item {
+            border: none;
+            margin-left: 20px;
+            list-style-type: disc;
+            margin-bottom: 10px;
+            line-height: 22px;
+          }
+        }
+        .tag {
+          span {
+            display: inline-block;
+            padding: 7px 10px;
+            border-radius: 5px;
+            margin-right: 10px;
+            margin-bottom: 5px;
           }
         }
       }

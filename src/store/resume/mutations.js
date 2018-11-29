@@ -3,22 +3,18 @@ export default {
         let data = state.content.mainContent.splice(start,1);
         state.content.mainContent.splice(end,0,data[0]);
     },
+    otherMove(state,{ start,end }) {
+        let data = state.content.otherContent.splice(start,1);
+        state.content.otherContent.splice(end,0,data[0]);
+    },
     changeStyle(state,payload) {
         state.style = { ...state.style, ...payload }
     },
-    remove(state,{ text }) {
-        for (var i = 0; i < state.content.mainContent.length;i++) {
-            if (state.content.mainContent[i].text === text) {
-                state.content.mainContent.splice(i,1);
-                return;
-            }
-        }
-
-        for (i = 0; i < state.content.otherContent.length;i++) {
-            if (state.content.otherContent[i].text === text) {
-                state.content.otherContent.splice(i,1);
-                return;
-            }
+    remove(state,{ isMain,idx }) {
+        if (isMain) {
+            state.content.mainContent.splice(idx,1);
+        } else {
+            state.content.otherContent.splice(idx,1);
         }
     },
     addModule(state,{ data }) {
@@ -28,7 +24,25 @@ export default {
             state.content.mainContent.push(data);
          }
     },
+    addModule2(state, { idx, data, isMain }) {
+        if (isMain) {
+            state.content.mainContent.splice(idx,0,data);
+        } else {
+            state.content.otherContent.splice(idx,0,data);
+        }
+    },
     changeScrollTop(state) {
         state.scrollTop = !state.scrollTop;
+    },
+    changeBaseMessage(state,payload) {
+        state.content.baseMessage = { ...state.content.baseMessage, ...payload }
+    },
+    changeMainContent(state,{ idx, data }) {
+        state.content.mainContent.splice(idx,1,data)
+
+    },
+    changeOtherContent(state,{ idx, data }) {
+        state.content.otherContent.splice(idx,1,data)
     }
+    
 }
