@@ -1,13 +1,13 @@
 <template>
     <div id='header'>
         <el-row class="header-wrapper">
-            <el-col class="logo" :span='6'><img src='./logo.png' /><span>Resume Builder</span></el-col>
+            <el-col class="logo" :span='6'><img src='../../common/image/logo.png' /><span>Resume Builder</span></el-col>
             <el-col :span='6'  :offset="12">
                 <el-row class='menu'>
                     <el-col :span=6><span>首页</span></el-col>
                     <el-col :span=6><span>查看模板</span></el-col>
                     <el-col :span=6><span>个人中心</span></el-col>
-                    <el-col :span=6><span>登出</span></el-col>
+                    <el-col :span=6><span><a href="./login.html">登出</a></span></el-col>
                 </el-row>
             </el-col>
         </el-row>
