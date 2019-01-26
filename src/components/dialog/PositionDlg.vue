@@ -1,6 +1,6 @@
 <template>
     <div v-if='isShow' id='position-dlg'>
-        <el-dialog width='520px'  :title="'编辑'+this.form.text" :visible="isShow">
+        <el-dialog :show-close='false' width='520px'  :title="'编辑'+this.form.text" :visible="isShow">
             <el-form :model="form">
                 <div class='form-item-wrapper' v-for='(item,index) in form.data' :key='index'>
                     <div class='form-item'>

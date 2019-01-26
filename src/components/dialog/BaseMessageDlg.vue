@@ -1,6 +1,6 @@
 <template>
     <div v-if='isShow' id='base-message-dlg'>
-        <el-dialog width='550px'  title="编辑基本信息" :visible="isShow">
+        <el-dialog width='550px' :show-close='false'  title="编辑基本信息" :visible="isShow">
             <el-form :model="form">
                 <div class='form-item'>
                     <span class='label'>{{form.name.name}}</span>

@@ -1,6 +1,6 @@
 <template>
     <div v-if='isShow' id='main-content-dlg'>
-        <el-dialog width='550px'  :title="'编辑'+this.form.text" :visible="isShow">
+        <el-dialog width='550px' :show-close='false'  :title="'编辑'+this.form.text" :visible="isShow">
             <el-form :model="form">
                 <div class='add-item'><i @click="addItem" class="el-icon-circle-plus"></i><span>添加新项目</span></div>
                 <div class='form-item-wrapper' v-for='(item,index) in form.data' :key='index'>

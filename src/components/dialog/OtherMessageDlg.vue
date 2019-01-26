@@ -1,6 +1,6 @@
 <template>
     <div v-if='isShow' id='other-message-dlg'>
-        <el-dialog width='450px'  :title="'编辑'+form.text" :visible="isShow">
+        <el-dialog  :show-close='false' width='450px'  :title="'编辑'+form.text" :visible="isShow">
             <el-form :model="form">
                 <el-input type="textarea" :autosize="{ minRows: 6}" size='mini' v-model="form.data"></el-input>
             </el-form> 

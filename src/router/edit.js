@@ -14,7 +14,7 @@ export default new Router({
       path: '/',
       name: 'home',
       component: EditPage
-    }, {
+    }, {  
       path: '/edit',
       name: 'edit',
       component: EditPage

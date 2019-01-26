@@ -1,6 +1,6 @@
 <template>
     <div v-if='isShow' id='tag-dlg'>
-        <el-dialog width='480px'  :title="'编辑'+this.form.text" :visible="isShow">
+        <el-dialog :show-close='false' width='480px'  :title="'编辑'+this.form.text" :visible="isShow">
             <div class='add-item'>
                 <el-input size='mini' v-model="inputData"></el-input>
                 <el-button @click="addItem" size='mini' type="primary">添加</el-button>

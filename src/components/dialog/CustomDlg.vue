@@ -1,6 +1,6 @@
 <template>
     <div v-if='isShow' id='custom-dlg'>
-        <el-dialog width='450px'  title="编辑自定义模块信息" :visible="isShow">
+        <el-dialog :show-close='false' width='450px'  title="编辑自定义模块信息" :visible="isShow">
             <div class='title'>模块名称</div>
             <el-radio-group v-model="form.type">
                 <el-radio :label="3">简单文本信息</el-radio>
