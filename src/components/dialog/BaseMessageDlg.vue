@@ -1,6 +1,6 @@
 <template>
     <div v-if='isShow' id='base-message-dlg'>
-        <el-dialog width='550px' :show-close='false'  title="编辑基本信息" :visible="isShow">
+        <el-dialog  width='550px' :show-close='false'  title="编辑基本信息" :visible="isShow">
             <el-form :model="form">
                 <div class='form-item'>
                     <span class='label'>{{form.name.name}}</span>
@@ -20,7 +20,7 @@
                         <el-input placeholder="字段名称" class='add-item-name' size='mini' v-model="item.name"></el-input>
                         <el-input placeholder="请输入字段内容" class='add-item-text' size='mini' v-model="item.text"></el-input>
                         <el-tooltip class="item" effect="dark" content="选择字段图标" placement="top">
-                            <div class="custom-icon ">
+                            <div @click="iconChoose2Show(index)" class="custom-icon ">
                                 <i :class='"fa fa-" + item.url'></i>
                             </div>
                         </el-tooltip>
@@ -32,10 +32,12 @@
                 <el-button @click="close">取 消</el-button>
                 <el-button type="primary" @click="confirm">确 定</el-button>
             </div>
+            <icon-choose :icon='this.form.custom[chooseIndex].url' :iconChooseShow='iconChooseShow' @iconChooseClose='iconChooseClose' />
         </el-dialog>
     </div>
 </template>
 <script>
+import IconChoose from '../iconChoose/IconChoose'
 export default {
     props: {
         isShow: {
@@ -45,7 +47,9 @@ export default {
     },
     data() {
         return {
-            form: {}
+            form: {},
+            iconChooseShow: false,
+            chooseIndex: 0
         }
     },
     methods: {
@@ -108,11 +112,23 @@ export default {
                     duration: 1000
                 });
             }
+        },
+        iconChooseClose(choose) {
+            this.iconChooseShow = false;
+            this.form.custom[this.chooseIndex].url = choose;
+        },
+        iconChoose2Show(index) {
+            this.chooseIndex = index;
+            this.iconChooseShow = true;
+            console.log(1232);
         }
     },
     created() {
         let newObj = this.deepCopy(this.$store.state.resume.content.baseMessage);
         this.form = Object.assign(this.form, newObj);
+    },
+    components: {
+        IconChoose
     }
 }
 </script>

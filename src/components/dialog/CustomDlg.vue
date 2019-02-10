@@ -1,6 +1,6 @@
 <template>
     <div v-if='isShow' id='custom-dlg'>
-        <el-dialog :show-close='false' width='450px'  title="编辑自定义模块信息" :visible="isShow">
+        <el-dialog :show-close='false'  width='450px'  title="编辑自定义模块信息" :visible="isShow">
             <div class='title'>模块名称</div>
             <el-radio-group v-model="form.type">
                 <el-radio :label="3">简单文本信息</el-radio>
@@ -14,7 +14,7 @@
             <div class='form-item'>
                 <span class='label'>模块图标</span>
                 <el-tooltip class="item" effect="dark" content="选择字段图标" placement="top">
-                    <div class="custom-icon ">
+                    <div @click="iconChoose2Show" class="custom-icon ">
                         <i :class='"fa fa-" + form.url'></i>
                     </div>
                 </el-tooltip>
@@ -23,10 +23,12 @@
                 <el-button @click="close">取 消</el-button>
                 <el-button type="primary" @click="confirm">确 定</el-button>
             </div>
+            <icon-choose :icon=' form.url' :iconChooseShow='iconChooseShow' @iconChooseClose='iconChooseClose' />
         </el-dialog>
     </div>
 </template>
 <script>
+import IconChoose from '../iconChoose/IconChoose.vue';
 export default {
     props: {
         isShow: {
@@ -44,8 +46,12 @@ export default {
                 text: '自定义模块',
                 url: 'microchip',
                 data: ''
-            }
+            },
+            iconChooseShow: false
         }
+    },
+    components: {
+        IconChoose
     },
     methods: {
         close() {
@@ -68,6 +74,13 @@ export default {
             }
             this.$store.commit(payload)
             this.close()
+        },
+        iconChooseClose(val) {
+            this.form.url = val;
+            this.iconChooseShow = false;
+        },
+        iconChoose2Show() {
+            this.iconChooseShow = true;
         }
     }
 }

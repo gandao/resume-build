@@ -4,15 +4,39 @@
             <el-col class="logo" :span='6'><img src='../../common/image/logo.png' /><span>Resume Builder</span></el-col>
             <el-col :span='6'  :offset="12">
                 <el-row class='menu'>
-                    <el-col :span=6><span>首页</span></el-col>
-                    <el-col :span=6><span>查看模板</span></el-col>
-                    <el-col :span=6><span>个人中心</span></el-col>
+                    <el-col :span=6><span @click="goTo(0)">首页</span></el-col>
+                    <el-col :span=6><span @click="goTo(1)">查看模板</span></el-col>
+                    <el-col :span=6><span @click="goTo(2)">个人中心</span></el-col>
                     <el-col :span=6><span><a href="./login.html">登出</a></span></el-col>
                 </el-row>
             </el-col>
         </el-row>
     </div>
 </template>
+<script>
+export default {
+    methods: {
+        goTo(index) {
+            let pathName = '';
+            switch(index) {
+                case 0:
+                    pathName = '/';
+                    break;
+                case 1:
+                    pathName = 'choose';
+                    break;
+                case 2:
+                    pathName = 'usercenter';
+                    break;
+                default:
+                    break;   
+            }
+            this.$router.push(pathName);
+        }
+    }
+}
+</script>
+
 <style lang="less" scoped>
 #header{
     font-size: 1.05rem;
