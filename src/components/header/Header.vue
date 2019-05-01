@@ -18,7 +18,7 @@ export default {
     methods: {
         goTo(index) {
             let pathName = '';
-            switch(index) {
+            switch (index) {
                 case 0:
                     pathName = '/';
                     break;

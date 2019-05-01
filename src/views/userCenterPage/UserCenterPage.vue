@@ -22,14 +22,25 @@
                 </div>
                 <div class='line'></div>
                 <div class='content' ref='content' >
-                    <div class='none-content'>
+                    <div v-if="false" class='none-content'>
                         <i class='fa-folder-open-o fa'></i>
                         <div class='desc'>no file</div>
                     </div>
+                    <div v-else class='content-wrapper'>
+                        <div class='resume-item1' v-for="(item,index) in 10" :key="index">
+                            <img class="resume-item-img" src="../../common/image/template1.png" />
+                            <div class='resume-item-body'>
+                                <div class='resume-item-name'>123</div>
+                                <div class='resume-item-edit'>
+                                    <i @click="deleteResume" class='fa fa-trash-o'/>
+                                    <i @click="editResume" class='fa fa-edit'/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class='pager' v-show='false'>
+                <div class='pager' v-show='true'>
                     <el-pagination
-                        background
                         layout="prev, pager, next"
                         :total="1000">
                     </el-pagination>
@@ -40,9 +51,32 @@
 </template>
 <script>
 export default {
+    data() {
+        return {
+            userData: {},
+            resumeData: []
+        }
+    },
     mounted() {
         var height = document.body.clientHeight - 310;
         this.$refs.content.setAttribute('style', 'min-height:' + height + 'px');
+    },
+    methods: {
+        // 删除简历
+        deleteResume() {
+            this.$confirm('是否确定删除该简历?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+            }).then(() => {
+    
+            })
+        },
+        // 跳转编辑简历页面
+        editResume() {
+
+        }
+
     }
 }
 </script>
@@ -149,6 +183,64 @@ export default {
                 .desc {
                     font-size: 1.8rem;
                 }
+            }
+            .content-wrapper {
+                font-size: 0;
+                margin-top: 20px;
+                .resume-item1 {
+                    display: inline-block;
+                    width: 25%;
+                    box-sizing: border-box;
+                    padding: 2%;
+                    position: relative;
+                    margin-bottom: 20px;
+                    &:hover {
+                       .resume-item-body {
+                           visibility: visible;
+                       }
+                    }
+                    img{
+                        display: block;
+                        width: 100%;
+                    }
+                    .resume-item-body {
+                        position: absolute;
+                        width: 96%;
+                        height: 96%;
+                        top: 2%;
+                        left: 2%;
+                        background-color: rgba(0, 0, 0, 0.3);
+                         visibility: hidden;
+                         .resume-item-name {
+                            font-size: 25px;
+                            color: #fff;
+                            font-weight: 700;
+                            border-bottom: 2px solid #fff;
+                            padding: 10px 10px;
+                            position: absolute;
+                            left: 50%;
+                            top: 50%;
+                            transform: translate(-50%,-50%);
+                         }
+                        .resume-item-edit {
+                            position: absolute;
+                            top: 5px;
+                            right: 5px;
+                            font-size: 20px;
+                            color: #fff;
+                            i{
+                                margin-left: 10px;
+                                cursor: pointer;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .pager {
+            text-align: right; 
+            .el-pagination {
+                display: inline-block;
             }
         }
     }

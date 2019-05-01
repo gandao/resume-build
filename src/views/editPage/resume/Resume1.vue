@@ -1,71 +1,6 @@
 <template>
     <object class='resume'>
         <div ref='resume' class='resume-item'>
-            <div class='left-content' :style="'background: ' + resumeData.style.color">
-                <div class='avatar'>
-                    <img src='./avatar.jpg' />
-                </div>
-                <div
-                    :style="{
-                        paddingTop:resumeData.style.moduleSize,
-                        paddingBottom: resumeData.style.moduleSize,
-                    }"
-                class='baseMessage'>
-                    <div class='title'>
-                        <i :style="'color: ' + resumeData.style.color" :class='"fa fa-"+resumeData.content.baseMessage.url'></i>
-                        <span>{{resumeData.content.baseMessage.text}}</span>
-                    </div>
-                    <div :style="{fontSize: resumeData.style.fontSize}" class='baseMessage-content'>
-                        <div class='baseMessage-content-item' v-for="(item,index) in resumeData.content.baseMessage.data" :key='index'>
-                            <i :class='"fa fa-"+item.url'></i>
-                            <span>{{item.text}}</span>
-                        </div>
-                        <div class='baseMessage-content-item' v-for="(item,index) in resumeData.content.baseMessage.custom" :key='index+resumeData.content.baseMessage.data.length'>
-                            <i :class='"fa fa-"+item.url'></i>
-                            <span>{{item.text}}</span>
-                        </div>
-                    </div>
-                    <div class='edit-btn'>
-                        <i @click="isBaseMessageDlgShow=true" class='fa fa-pencil'></i>
-                    </div>
-                </div>
-                <ul class='other-content'>
-                    <li 
-                        @dragstart='dragStartOther($event,index,item.type)'
-                        @dragover='dragover'
-                        @drop='dropOther($event,index)'
-                        draggable=true
-                        :style="{
-                            paddingTop:resumeData.style.moduleSize,
-                            paddingBottom: resumeData.style.moduleSize,
-                        }"
-                        class='other-content-item'
-                        v-for='(item,index) in resumeData.content.otherContent'
-                        :key='index'
-                    >
-                        <div class='title'>
-                            <i :style="'color: ' + resumeData.style.color" :class='"fa fa-"+item.url'></i>
-                            <span>{{item.text}}</span>
-                        </div>
-                        <div :style="{fontSize: resumeData.style.fontSize}" class='content'>
-                            <ul class='skill' v-if='item.type===5'>
-                                <li :style="{lineHeight: resumeData.style.lineHeight}"  v-for='(item1,index1) in item.data' :key='index1'>{{item1}}</li>
-                            </ul>
-                            <div class='tag' v-else-if='item.type===4'>
-                                <span v-for='(item1,index1) in item.data' :key='index1'>{{item1}}</span>
-                            </div>
-                            <div :style="{fontSize: resumeData.style.fontSize,lineHeight: resumeData.style.lineHeight}" class='tag' v-else-if='item.type===3'>
-                              {{item.data}}
-                            </div>
-                        </div>
-                        <div class='edit-btn'>
-                            <i @click="removeContent(false,index)" class='fa fa-trash-o'></i>             
-                            <i class='fa fa-arrows'></i>
-                            <i @click='eidtMainContent(item.type,index,false)'  class='fa fa-pencil'></i>
-                        </div>
-                    </li>
-                </ul>
-            </div>
             <div class='right-content'>
                 <div :style="{
                         paddingTop:resumeData.style.moduleSize,
@@ -134,6 +69,71 @@
                             <i @click="removeContent(true,index)" class='fa fa-trash-o'></i>                
                             <i @mousedown='setDrag(index)' class='fa fa-arrows'></i>
                             <i @click='eidtMainContent(item.type,index,true)' class='fa fa-pencil'></i>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class='left-content' :style="'background: ' + resumeData.style.color">
+                <div class='avatar'>
+                    <img src='./avatar.jpg' />
+                </div>
+                <div
+                    :style="{
+                        paddingTop:resumeData.style.moduleSize,
+                        paddingBottom: resumeData.style.moduleSize,
+                    }"
+                class='baseMessage'>
+                    <div class='title'>
+                        <i :style="'color: ' + resumeData.style.color" :class='"fa fa-"+resumeData.content.baseMessage.url'></i>
+                        <span>{{resumeData.content.baseMessage.text}}</span>
+                    </div>
+                    <div :style="{fontSize: resumeData.style.fontSize}" class='baseMessage-content'>
+                        <div class='baseMessage-content-item' v-for="(item,index) in resumeData.content.baseMessage.data" :key='index'>
+                            <i :class='"fa fa-"+item.url'></i>
+                            <span>{{item.text}}</span>
+                        </div>
+                        <div class='baseMessage-content-item' v-for="(item,index) in resumeData.content.baseMessage.custom" :key='index+resumeData.content.baseMessage.data.length'>
+                            <i :class='"fa fa-"+item.url'></i>
+                            <span>{{item.text}}</span>
+                        </div>
+                    </div>
+                    <div class='edit-btn'>
+                        <i @click="isBaseMessageDlgShow=true" class='fa fa-pencil'></i>
+                    </div>
+                </div>
+                <ul class='other-content'>
+                    <li 
+                        @dragstart='dragStartOther($event,index,item.type)'
+                        @dragover='dragover'
+                        @drop='dropOther($event,index)'
+                        draggable=true
+                        :style="{
+                            paddingTop:resumeData.style.moduleSize,
+                            paddingBottom: resumeData.style.moduleSize,
+                        }"
+                        class='other-content-item'
+                        v-for='(item,index) in resumeData.content.otherContent'
+                        :key='index'
+                    >
+                        <div class='title'>
+                            <i :style="'color: ' + resumeData.style.color" :class='"fa fa-"+item.url'></i>
+                            <span>{{item.text}}</span>
+                        </div>
+                        <div :style="{fontSize: resumeData.style.fontSize}" class='content'>
+                            <ul class='skill' v-if='item.type===5'>
+                                <li :style="{lineHeight: resumeData.style.lineHeight}"  v-for='(item1,index1) in item.data' :key='index1'>{{item1}}</li>
+                            </ul>
+                            <div class='tag' v-else-if='item.type===4'>
+                                <span v-for='(item1,index1) in item.data' :key='index1'>{{item1}}</span>
+                            </div>
+                            <div :style="{fontSize: resumeData.style.fontSize,lineHeight: resumeData.style.lineHeight}" class='tag' v-else-if='item.type===3'>
+                              {{item.data}}
+                            </div>
+                        </div>
+                        <div class='edit-btn'>
+                            <i @click="removeContent(false,index)" class='fa fa-trash-o'></i>             
+                            <i class='fa fa-arrows'></i>
+                            <i @click='eidtMainContent(item.type,index,false)'  class='fa fa-pencil'></i>
                         </div>
                     </li>
                 </ul>
@@ -370,7 +370,7 @@ export default {
     .left-content {
       position: absolute;
       top: 0;
-      left: 0;
+      right: 0;
       box-sizing: border-box;
       vertical-align: top;
       width: 33%;
@@ -462,10 +462,10 @@ export default {
           }
         }
       }
-    }
+    } 
     .right-content {
       box-sizing: border-box;
-      margin-left: 33%;
+      margin-right: 33%;
       width: 66%;
       height: 100%;
       padding: 20px 30px;
@@ -617,7 +617,7 @@ export default {
         .tag {
           span {
             display: inline-block;
-            padding: 5px 8px;
+            padding: 7px 10px;
             border-radius: 5px;
             margin-right: 10px;
             margin-bottom: 5px;

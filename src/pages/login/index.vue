@@ -69,7 +69,7 @@ export default {
             userData: {
                 mail: '',
                 password: '',
-                confirm: '',
+                confirm: ''
             },
             findPassword: '',
             timer: 60,
@@ -81,7 +81,7 @@ export default {
     },
     methods: {
         funLogin() {
-            if(this.loginData.account && this.loginData.password) {
+            if (this.loginData.account && this.loginData.password) {
                 this.$notify({
                     title: '提示',
                     message: '请输入账号或密码',
@@ -92,7 +92,7 @@ export default {
                 return;
             }
             
-            if(0) {
+            if (this.timerIsShow) {
                 this.$notify({
                     title: '错误',
                     message: '请输入账号或密码',
@@ -100,7 +100,7 @@ export default {
                     offset: 100,
                     duration: 1000
                 });
-                return;
+                
             } else {
                 let index = window.location.href.indexOf('login');
 
@@ -108,9 +108,9 @@ export default {
             }
         },
         close() {
-            for(var item in this.userData) {
-                item = '';
-            }
+            // for (var item in this.userData) {
+            //     item = '';
+            // }
             this.registerIsShow = false;
         },
         closeFind() {
@@ -118,7 +118,7 @@ export default {
             this.findIsShow = false
         },
         confirm() {
-            if(1) {
+            if (this.timerIsShow) {
                 this.registerIsShow = false;
             } else {
                 this.$notify({
@@ -132,9 +132,9 @@ export default {
         },
         post() {
             this.timerIsShow = true;
-            this.tiemrs = setInterval(()=>{
+            this.tiemrs = setInterval(() => {
                 this.timer--;
-                if(!this.timer) {
+                if (!this.timer) {
                     clearInterval(this.tiemrs);
                     this.timer = 60;
                 }
@@ -155,7 +155,7 @@ export default {
             let reg = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/;
             return reg.test(this.userData.mail) ? 'el-icon-success' : 'el-icon-error'
         }
-    },
+    }
 };
 </script>
 <style lang="less" scoped>

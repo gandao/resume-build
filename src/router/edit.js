@@ -5,7 +5,6 @@ import ChoosePage from '../views/choosePage/ChoosePage.vue'
 import EditPage from '../views/editPage/Index.vue'
 // import IntroducePage from '../views/introducePage/IntroducePage.vue'
 import UserCenterPage from '../views/userCenterPage/UserCenterPage.vue'
-
 Vue.use(Router)
 
 export default new Router({

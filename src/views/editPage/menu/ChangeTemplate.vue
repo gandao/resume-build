@@ -4,9 +4,9 @@
             <div @click="onHandleClose"><i class="el-icon-arrow-left"></i>关闭</div>
         </div>
         <div class='content'>
-            <div class='template' v-for="(item,index) in 5" :key='index'>
-                <img src='http://static.500d.me/upload/resume_bank_item/jm0225.jpg'/>
-                <div  class='cover'>
+            <div class='template' v-for="(item,index) in 9" :key='index'>
+                <img :src='"../../../common/image/template" + (index+1) + ".png"' />
+                <div @click="changeTemplate(index)" class='cover'>
                     <i class='el-icon-edit'></i>
                     <span>替换模板</span>
                 </div>
@@ -18,13 +18,36 @@
 export default {
     data() {
         return {
-            templates: []
+            templates: [
+            ]
         }
     },
+    computed: {
+      resumeType() {
+          return this.$store.state.resume.resumeType;
+      }
+  },
     methods: {
         onHandleClose() {
             this.$emit('onClose')
+        },
+        changeTemplate(idx) {
+            if (this.resumeType === idx) {
+                return
+            }
+
+            let payload = { type: 'changeTemplate', templateId: idx }
+            this.$store.commit(payload)
+
+            this.$notify({
+                title: '成功',
+                message: '模板替换成功！',
+                type: 'success',
+                offset: 100,
+                duration: 1000
+            });
         }
+        
     }
 }
 </script>

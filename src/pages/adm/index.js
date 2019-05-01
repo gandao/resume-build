@@ -8,7 +8,7 @@ import VueAxios from 'vue-axios'
 
 axios.defaults.baseURL = ''
 
-Vue.use(VueAxios,axios)
+Vue.use(VueAxios, axios)
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 
