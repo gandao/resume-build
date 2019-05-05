@@ -45,6 +45,12 @@ export default {
   },
   changeOtherContent (state, { idx, data }) {
     state.content.otherContent.splice(idx, 1, data)
+  },
+  changeAllData(state, payload) {
+    delete payload.type
+    for (var item in payload) {
+      state[item] = payload[item]
+    }
   }
 
 }

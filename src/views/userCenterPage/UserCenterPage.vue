@@ -4,18 +4,21 @@
             <div class='left'>
                 <div class='title'>个人信息</div>
                 <div class='msg-wrapper'>
-                    <div class='name msg-item'>账号名: 小明</div>
-                    <div class='date msg-item'>注册日期: 2019-01-01</div>
+                    <div class='name lever msg-item'>
+                        <span>{{'账号名：' + user.name}}</span>
+                        <span @click="toggleBaseEdit" class='lever-up'>编辑</span>
+                    </div>
+                    <div class='date msg-item'>{{'简历数量：' + resumeNum}}</div>
                     <div class='lever msg-item'>
-                        <span>等级: 普通会员</span>
-                        <span>升级</span>
+                        <span>{{'等级：'+ (user.isVip ? '尊贵会员' : '普通会员')}}</span>
+                        <span @click="leverUp" class='lever-up' v-if='!user.isVip'>升级</span>
                     </div>
                 </div>
             </div>
             <div class='right'>
                 <div class='title-wrapper'>
                     <div class='title'>简历管理中心</div>
-                    <div class='add'>
+                    <div @click="toggleCreate" class='add'>
                         <i class='fa fa-plus'></i>
                         <span>新建简历</span>
                     </div>
@@ -27,19 +30,19 @@
                         <div class='desc'>no file</div>
                     </div>
                     <div v-else class='content-wrapper'>
-                        <div class='resume-item1' v-for="(item,index) in 10" :key="index">
+                        <div class='resume-item1' v-for="(item,index) in resumeData" :key="index">
                             <img class="resume-item-img" src="../../common/image/template1.png" />
                             <div class='resume-item-body'>
-                                <div class='resume-item-name'>123</div>
+                                <div class='resume-item-name'>{{item.name}}</div>
                                 <div class='resume-item-edit'>
-                                    <i @click="deleteResume" class='fa fa-trash-o'/>
-                                    <i @click="editResume" class='fa fa-edit'/>
+                                    <i @click="deleteResume(item._id)" class='fa fa-trash-o'/>
+                                    <i @click="editResume(item._id)" class='fa fa-edit'/>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class='pager' v-show='true'>
+                <div class='pager' v-show='pagelen > 1'>
                     <el-pagination
                         layout="prev, pager, next"
                         :total="1000">
@@ -47,6 +50,32 @@
                 </div>
             </div>
         </div>
+        <el-dialog width='500px' :show-close='false' title="修改用户名称" :visible="isBaseEditShow">
+            <el-form :model="userData">
+                <div class='form-item'>
+                    <span class='label'>填写名称</span>
+                    <el-input size='mini' v-model="userName"></el-input>
+                    <i :class="mailFilter"></i>
+                </div>
+            </el-form> 
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="toggleBaseEdit">取 消</el-button>
+                <el-button type="primary" @click="confirmBase">确 定</el-button>
+            </div>
+        </el-dialog>
+        <el-dialog width='500px' :show-close='false' title="填写简历名称" :visible="iscreatResumeShow">
+            <el-form>
+                <div class='form-item'>
+                    <span class='label'>填写名称</span>
+                    <el-input size='mini' v-model="resumeName"></el-input>
+                    <i :class="mailFilter"></i>
+                </div>
+            </el-form> 
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="toggleCreate">取 消</el-button>
+                <el-button type="primary" @click="confirmResume">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -54,7 +83,13 @@ export default {
     data() {
         return {
             userData: {},
-            resumeData: []
+            resumeData: [],
+            isBaseEditShow: false,
+            iscreatResumeShow: false,
+            userName: '',
+            resumeName: '',
+            resumeNum: 0,
+            pagelen: 0
         }
     },
     mounted() {
@@ -63,20 +98,98 @@ export default {
     },
     methods: {
         // 删除简历
-        deleteResume() {
+        deleteResume(resumeId) {
             this.$confirm('是否确定删除该简历?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
             }).then(() => {
-    
+                this.axios.get('/resume/deleteResume?resumeId=' + resumeId).then(res => {
+                    if (res.data.id !== -1) {
+                        this.init()
+                        this.notify(res.data.message,'success')
+                    } else {
+                        this.notify(res.data.message)
+                    }
+                })
+            },() => {
             })
         },
         // 跳转编辑简历页面
-        editResume() {
-
+        editResume(resumeId) {
+            this.axios.get('/resume/resumeDetail?resumeId=' + resumeId).then(res => {
+                if (res.data.id !== -1) {
+                    this.$store.commit({ type: 'changeAllData',...res.data.data })
+                    this.$router.push({ name: 'edit',query: { resumeId } })
+                }
+            })
+        },
+        leverUp() {
+            this.axios.get('resume/leverUp').then(res => {
+                let type = 'warning'
+                if (res.data.id !== -1) {
+                    this.$store.commit({ type: 'changeState', isVip: true })
+                    type = 'success'
+                }
+                this.notify(res.data.message,type)
+            })
+        },
+        notify(message,type = 'warning') {
+            this.$notify({
+                title: '提示',
+                message,
+                type,
+                offset: 100,
+                duration: 1500
+            });
+        },
+        toggleBaseEdit() {
+            this.isBaseEditShow = !this.isBaseEditShow
+        },
+        confirmBase() {
+            let type = 'warning'
+            this.axios.post('resume/editUser',{ name: this.userName }).then(res => {
+                if (res.data.id !== -1) {
+                    this.$store.commit({ type: 'changeState', name: this.userName })
+                    type = 'success'
+                }
+                this.toggleBaseEdit()
+                this.notify(res.data.message,type)
+            })
+        },
+        toggleCreate() {
+            this.iscreatResumeShow = !this.iscreatResumeShow
+        },
+        confirmResume() {
+            if (this.resumeName !== '') {
+                 this.axios.post('resume/createResume',{ name: this.resumeName }).then(res => {
+                     if (res.data.id !== -1) {
+                         this.init()
+                         this.notify(res.data.message,'success')
+                     } else {
+                         this.notify(res.data.message)
+                     }
+                     this.toggleCreate()
+                 })
+            }
+        },
+        init() {
+            this.axios.get('/resume/getResumes').then(res => {
+                if (res.data.id !== -1) {
+                    this.resumeData = res.data.data.resumes
+                    this.pagelen = res.data.data.pageLen
+                    this.resumeNum = res.data.data.resumeNum
+                }
+            })
         }
-
+    },
+    computed: {
+        user() {
+        return this.$store.state.user
+        }
+    },
+    created() {
+        this.init()
     }
 }
 </script>
@@ -112,7 +225,7 @@ export default {
             span{
                 display: inline-block;
                 vertical-align: middle;
-                &:last-child {
+                &.lever-up {
                     cursor: pointer;
                     line-height: 20px;
                     margin-left: 10px;
@@ -244,6 +357,32 @@ export default {
             }
         }
     }
-    
+    .form-item {
+        margin-bottom: 30px;
+        &:last-child {
+            margin: 0;
+        }
+        .el-input{
+            display: inline-block;
+            vertical-align: middle;
+            width: 70%;
+            margin-left: 20px;
+            &.find-password-input {
+                width: 65%;
+            }
+        }
+        i {
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 10px;
+            font-size: 1.2em;
+            &.el-icon-error{
+                color: #F56C6C;
+            }
+            &.el-icon-success {
+                color: #409EFF;
+            }
+        }
+    }
 }
 </style>

@@ -12,12 +12,20 @@
 import Header from '../../components/header/Header.vue'
 
 export default {
+  computed: {
+    user() {
+      return this.$store.state.user
+    }
+  },
   components: {
     Header
   },
   created() {
     this.axios.get('resume/isLogin').then(res => {
-      console.log(res)
+        if (res.data.id !== -1) {
+          this.$store.commit({ type: 'toggleLogin' })
+          this.$store.commit({ type: 'changeState', ...res.data.user })
+        }
     })
   }
 }

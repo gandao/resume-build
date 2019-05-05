@@ -1,5 +1,5 @@
 export default {
-  resumeType: 7,
+  resumeType: 1,
   name: '简历',
   style: {
     color: '#DA180F',
@@ -15,7 +15,7 @@ export default {
       avatar: '',
       name: {
         name: '姓名',
-        text: '小明',
+        text: '姓名',
         url: 'user-o'
       },
       desc: {
@@ -26,38 +26,38 @@ export default {
       // 用户自定义字段
       custom: [{
         name: '学历',
-        text: '本科',
+        text: '学历',
         url: 'graduation-cap'
       }],
       // 必填字段
       data: [
         {
           name: '学历',
-          text: '本科',
+          text: '学历',
           url: 'graduation-cap'
         },
         {
           name: '所在地',
-          text: '成都',
+          text: '所在地',
           url: 'location-arrow'
         },
         {
           name: '工作时间',
-          text: '5年',
+          text: '工作时间',
           url: 'calendar'
         }, {
           name: '出生日期',
-          text: '1997-01-01',
+          text: '出生日期',
           url: 'birthday-cake'
         },
         {
           name: '联系电话',
-          text: '18281572953',
+          text: '联系电话',
           url: 'phone'
         },
         {
           name: '邮箱',
-          text: '123@qq.com',
+          text: '邮箱',
           url: 'envelope-o'
         }]
     },
@@ -140,14 +140,9 @@ export default {
         type: 2,
         data: [
           {
-            time: '2018',
-            name: 'ACM亚洲邀请赛二等奖',
-            lever: '国级'
-          },
-          {
-            time: '2018',
-            name: 'ACM中国赛区一等奖',
-            lever: '国级'
+            time: '填写时间',
+            name: '奖项名称',
+            lever: '奖项级别'
           }
         ]
       }, {
@@ -155,11 +150,6 @@ export default {
         text: '个人技能',
         url: 'star',
         data: ['熟悉ajax和jQuery', '熟悉HTTP请求和网络原理', '了解ES5/ES6，对原型、闭包、作用域有自己的理解']
-      }, {
-        type: 4,
-        text: '个人标签',
-        url: 'tags',
-        data: ['旅游', '健身', '游戏', '动漫', '摄影']
       }]
   },
   scrollTop: true

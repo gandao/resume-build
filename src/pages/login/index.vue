@@ -9,7 +9,7 @@
             <div class="desc">Enjoy a simple editorial resume process</div>
         </div>
         <div class="login-wrapper">
-            <el-input placeholder="请输入账号(邮箱)" type='text' v-model="loginData.account"></el-input>
+            <el-input placeholder="请输入账号(邮箱)" type='text' v-model="loginData.email"></el-input>
             <el-input placeholder="请输入秘密" type="password" v-model="loginData.password"></el-input>
             <div class='button-wrapper'>
                 <span @click="findIsShow = true" class='forget'>忘记密码</span>
@@ -23,8 +23,13 @@
     <el-dialog width='500px' :show-close='false' title="注册" :visible="registerIsShow">
             <el-form :model="userData">
                 <div class='form-item'>
+                    <span class='label'>填写名称</span>
+                    <el-input size='mini' v-model="userData.name"></el-input>
+                    <i :class="mailFilter"></i>
+                </div>
+                <div class='form-item'>
                     <span class='label'>填写邮箱</span>
-                    <el-input size='mini' v-model="userData.mail"></el-input>
+                    <el-input size='mini' v-model="userData.email"></el-input>
                     <i :class="mailFilter"></i>
                 </div>
                 <div class='form-item'>
@@ -63,11 +68,12 @@ export default {
     data() {
         return {
             loginData: {
-                account: '',
+                email: '',
                 password: ''
             },
             userData: {
-                mail: '',
+                name: '',
+                email: '',
                 password: '',
                 confirm: ''
             },
@@ -81,31 +87,14 @@ export default {
     },
     methods: {
         funLogin() {
-            if (this.loginData.account && this.loginData.password) {
-                this.$notify({
-                    title: '提示',
-                    message: '请输入账号或密码',
-                    type: 'warning',
-                    offset: 100,
-                    duration: 1000
-                });
-                return;
-            }
-            
-            if (this.timerIsShow) {
-                this.$notify({
-                    title: '错误',
-                    message: '请输入账号或密码',
-                    type: 'warning',
-                    offset: 100,
-                    duration: 1000
-                });
-                
-            } else {
-                let index = window.location.href.indexOf('login');
-
-                window.location.href = window.location.href.substring(0,index) + 'edit' 
-            }
+            let { email, password } = this.loginData
+            this.axios.post('/resume/signin',{ email,password }).then((res) => {
+                if (res.data.id !== -1) {
+                    window.location.href = window.location.href.replace(/login.html/,'edit')
+                } else {
+                    this.notify(res.data.message)
+                }
+            })
         },
         close() {
             // for (var item in this.userData) {
@@ -118,17 +107,18 @@ export default {
             this.findIsShow = false
         },
         confirm() {
-            if (this.timerIsShow) {
-                this.registerIsShow = false;
-            } else {
-                this.$notify({
-                    title: '错误',
-                    message: '邮箱已被注册',
-                    type: 'warning',
-                    offset: 100,
-                    duration: 1000
-                });
-            }
+            let { name, email,password } = this.userData
+            let type = 'warning'
+            this.axios.post('resume/signup',{ email,password, name }).then((res) => {
+                console.log(res)
+                if (res.data.id !== -1) {
+                    type = 'success'
+                }
+
+                this.notify(res.data.message,type)
+
+                this.registerIsShow = false
+            })
         },
         post() {
             this.timerIsShow = true;
@@ -148,13 +138,29 @@ export default {
                 duration: 1500
             });
 
+        },
+        notify(message,type = 'warning') {
+            this.$notify({
+                title: '提示',
+                message,
+                type,
+                offset: 100,
+                duration: 1500
+            });
         }
     },
     computed: {
         mailFilter() {
             let reg = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/;
-            return reg.test(this.userData.mail) ? 'el-icon-success' : 'el-icon-error'
+            return reg.test(this.userData.email) ? 'el-icon-success' : 'el-icon-error'
         }
+    },
+    created() {
+        this.axios.get('resume/isLogin').then(res => {
+            if (res.data.id !== -1) {
+                window.location.href = window.location.href.replace(/login.html/,'edit')
+            }
+        })
     }
 };
 </script>

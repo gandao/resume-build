@@ -6,8 +6,8 @@
                 <el-row class='menu'>
                     <el-col :span=6><span @click="goTo(0)">首页</span></el-col>
                     <el-col :span=6><span @click="goTo(1)">查看模板</span></el-col>
-                    <el-col :span=6><span @click="goTo(2)">个人中心</span></el-col>
-                    <el-col :span=6><span><a href="./login.html">登出</a></span></el-col>
+                    <el-col v-if='user.isLogin' :span=6><span @click="goTo(2)">个人中心</span></el-col>
+                    <el-col :span=6><span @click='login'>{{user.isLogin ? '登出' : '登录'}}</span></el-col>
                 </el-row>
             </el-col>
         </el-row>
@@ -32,6 +32,21 @@ export default {
                     break;   
             }
             this.$router.push(pathName);
+        },
+        login() {
+            if (this.user.isLogin) {
+                this.axios.get('resume/signout').then(res => {
+                    this.$store.commit({ type: 'toggleLogin' })
+                })
+            } else {
+                window.location.href = window.location.href.replace(/(edit|#)([\S]*)/i,'login.html')
+            }
+            console.log(window.location.href.replace(/edit([\S]*)/i,'login.hmtl'))
+        }
+    },
+    computed: {
+        user() {
+            return this.$store.state.user
         }
     }
 }
@@ -63,6 +78,12 @@ export default {
         .menu .el-col span{
             cursor: pointer;
             &:hover{
+                color: #000;
+            }
+        }
+        .menu {
+            a {
+                text-decoration: none;
                 color: #000;
             }
         }

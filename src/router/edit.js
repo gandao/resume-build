@@ -18,7 +18,7 @@ export default new Router({
       name: 'edit',
       component: EditPage
     }, {
-      path: '/choose',
+      path: '/choose', 
       name: 'choose',
       component: ChoosePage
     }, {

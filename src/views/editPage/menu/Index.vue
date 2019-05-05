@@ -1,6 +1,6 @@
 <template>
     <div id='aside-menu'>
-        <div class='save'><div><img src='./image/save.png'/><span>保存</span></div></div>
+        <div class='save'><div><img src='./image/save.png'/><span @click="save">保存</span></div></div>
         <ul class='menu'>
             <li><img src="./image/mode.png" /><span @click="handleChangeSetting(0)">模块管理</span></li>
             <li><img class='small' src="./image/template.png"/><span @click="handleChangeSetting(1)">更换模板</span></li>
@@ -66,6 +66,26 @@ export default {
         handleChangeSetting(index) {
             this.settingItemIdx = index
             this.settingShow = true
+        },
+        notify(message,type = 'warning') {
+            this.$notify({
+                title: '提示',
+                message,
+                type,
+                offset: 100,
+                duration: 1500
+            });
+        },
+        save() {
+            if (this.$route.query.resumeId !== undefined) {
+                this.axios.post('/resume/saveEdit', { resumeId: this.$route.query.resumeId,data: this.$store.state.resume }).then(res => {
+                    if (res.data.id !== -1) {
+                        this.notify(res.data.message,'success')
+                    } else {
+                        this.notify(res.data.message)
+                    }
+                })
+            }
         }
     },
     components: {
