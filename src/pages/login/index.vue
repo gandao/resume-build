@@ -64,6 +64,7 @@
   </div>
 </template>
 <script>
+import qs from 'qs'
 export default {
     data() {
         return {
@@ -88,7 +89,8 @@ export default {
     methods: {
         funLogin() {
             let { email, password } = this.loginData
-            this.axios.post('/resume/signin',{ email,password }).then((res) => {
+            console.log('dasd')
+            this.axios.post('/resume/signin',qs.stringify({ email,password })).then((res) => {
                 if (res.data.id !== -1) {
                     window.location.href = window.location.href.replace(/login.html/,'edit')
                 } else {

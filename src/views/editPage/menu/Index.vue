@@ -1,15 +1,13 @@
 <template>
     <div id='aside-menu'>
-        <div class='save'><div><img src='./image/save.png'/><span @click="save">保存</span></div></div>
+        <div class='save'><div  @click="save"><img src='./image/save.png'/><span >保存</span></div></div>
         <ul class='menu'>
             <li><img src="./image/mode.png" /><span @click="handleChangeSetting(0)">模块管理</span></li>
             <li><img class='small' src="./image/template.png"/><span @click="handleChangeSetting(1)">更换模板</span></li>
-            <li><img src="./image/style.png"/><span @click="handleChangeSetting(2)">风格设置<img class='lock' src='./image/lock.png' /></span></li>
-            <li><img src='./image/download.png' /><span @click="printPDF">下载简历</span><img class='lock' src='./image/lock.png' /></li>
+            <li><img src="./image/style.png"/><span @click="handleChangeSetting(2)">风格设置<img v-if='!user.isVip' class='lock' src='./image/lock.png' /></span></li>
+            <li><img src='./image/download.png' /><span @click="printPDF">下载简历</span><img  v-if='!user.isVip' class='lock' src='./image/lock.png' /></li>
         </ul>
         <div class='evaluate'>
-            <span>简历完善度</span>
-            <el-progress :percentage="70"></el-progress>
             <div class='desc'>查看简历是否有内容未完善，尽量完成到100%哦！</div>
         </div>
         <transition name='setting'>
@@ -33,6 +31,9 @@ export default {
     },
     methods: {
         printPDF() {
+            if (this.isNoUser() || this.isNoVip()) {
+                return
+            }
             // 获取到页面html
             var bdhtml = window.document.body.innerHTML
 
@@ -41,7 +42,14 @@ export default {
             var eprnstr = "</object>"
 
             // 切除标签以外的东西
-            var prnhtml = bdhtml.substr(bdhtml.indexOf(sprnstr) + 42)
+            var begin = bdhtml.indexOf(sprnstr);
+            while (true) {
+                if (bdhtml[begin] === '>') {
+                    break;
+                }
+                begin++;
+            }
+            var prnhtml = bdhtml.substr(begin + 1)
             prnhtml = prnhtml.substring(0,prnhtml.indexOf(eprnstr))
 
             // 替换body的内容
@@ -58,12 +66,16 @@ export default {
             window.document.body.innerHTML = bdhtml
             // 此处是业务需要 由于有动态生成数据 直接返回样式会乱 所以手动刷新了一下
             window.location.reload()
-
         },
         onClose() {
             this.settingShow = false
         },
         handleChangeSetting(index) {
+            const SETSTYLE = 2
+            const DOWNLOAD = 3
+            if ((index === SETSTYLE || index === DOWNLOAD) && (this.isNoUser() || this.isNoVip())) {
+                return
+            }
             this.settingItemIdx = index
             this.settingShow = true
         },
@@ -77,21 +89,49 @@ export default {
             });
         },
         save() {
-            if (this.$route.query.resumeId !== undefined) {
-                this.axios.post('/resume/saveEdit', { resumeId: this.$route.query.resumeId,data: this.$store.state.resume }).then(res => {
-                    if (res.data.id !== -1) {
-                        this.notify(res.data.message,'success')
-                    } else {
-                        this.notify(res.data.message)
-                    }
-                })
+            if (this.isNoUser()) {
+                if (this.$route.query.resumeId == undefined) {
+                    this.axios.post('/resume/saveEdit', { resumeId: this.$route.query.resumeId,data: this.$store.state.resume }).then(res => {
+                        if (res.data.id !== -1) {
+                            this.notify(res.data.message,'success')
+                        } else {
+                            this.notify(res.data.message)
+                        }
+                    })
+                } else {
+                    this.notify('请到个人中心选择简历进行编辑')
+                }
+            }
+        },
+        // 用户未登录
+        isNoUser() {
+            if (this.user.isLogin) {
+                return false
+            } else {
+                this.notify('请先登录')
+                return true
+            }
+        },
+        // 不是vip用户
+        isNoVip() {
+            if (this.user.isVip) {
+                return false
+            } else {
+                this.notify('请到个人中心升级权限')
+                return true
             }
         }
+
     },
     components: {
         StyleSetting,
         ModuleManage,
         ChangeTemplate
+    },
+    computed: {
+        user() {
+            return this.$store.state.user
+        }
     }
 }
 </script>
@@ -105,6 +145,9 @@ export default {
         width: 100%;
         height: 120px;
         border-bottom: 1px solid #DCDFE6;
+        &>div {
+            cursor: pointer;
+        }
         div{
             position: absolute;
             top: 50%;

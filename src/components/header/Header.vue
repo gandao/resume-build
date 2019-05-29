@@ -5,7 +5,6 @@
             <el-col :span='6'  :offset="12">
                 <el-row class='menu'>
                     <el-col :span=6><span @click="goTo(0)">首页</span></el-col>
-                    <el-col :span=6><span @click="goTo(1)">查看模板</span></el-col>
                     <el-col v-if='user.isLogin' :span=6><span @click="goTo(2)">个人中心</span></el-col>
                     <el-col :span=6><span @click='login'>{{user.isLogin ? '登出' : '登录'}}</span></el-col>
                 </el-row>
@@ -36,12 +35,12 @@ export default {
         login() {
             if (this.user.isLogin) {
                 this.axios.get('resume/signout').then(res => {
-                    this.$store.commit({ type: 'toggleLogin' })
+                    this.$store.commit({ type: 'resetState' })
                 })
-            } else {
-                window.location.href = window.location.href.replace(/(edit|#)([\S]*)/i,'login.html')
             }
-            console.log(window.location.href.replace(/edit([\S]*)/i,'login.hmtl'))
+            
+            window.location.href = window.location.href.replace(/\/(edit|#)([\S]*)/i,'/login.html')
+            
         }
     },
     computed: {

@@ -1,6 +1,5 @@
 export default {
   resumeType: 1,
-  name: '简历',
   style: {
     color: '#DA180F',
     fontSize: '15px',
@@ -151,6 +150,5 @@ export default {
         url: 'star',
         data: ['熟悉ajax和jQuery', '熟悉HTTP请求和网络原理', '了解ES5/ES6，对原型、闭包、作用域有自己的理解']
       }]
-  },
-  scrollTop: true
+  }
 }

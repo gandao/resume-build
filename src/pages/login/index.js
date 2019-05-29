@@ -7,7 +7,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 
 axios.defaults.baseURL = ''
-
+axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 Vue.use(VueAxios,axios)
 Vue.use(ElementUI)
 Vue.config.productionTip = false

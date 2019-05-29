@@ -31,7 +31,7 @@
                     </div>
                     <div v-else class='content-wrapper'>
                         <div class='resume-item1' v-for="(item,index) in resumeData" :key="index">
-                            <img class="resume-item-img" src="../../common/image/template1.png" />
+                            <img class="resume-item-img" :src='"../../common/image/template" + item.resumeType + ".png"' />
                             <div class='resume-item-body'>
                                 <div class='resume-item-name'>{{item.name}}</div>
                                 <div class='resume-item-edit'>
@@ -185,7 +185,7 @@ export default {
     },
     computed: {
         user() {
-        return this.$store.state.user
+            return this.$store.state.user
         }
     },
     created() {

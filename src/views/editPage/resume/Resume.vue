@@ -1,9 +1,13 @@
 <template>
     <object class='resume'>
-        <div ref='resume' class='resume-item'>
+        <div :style="{ fontFamily: resumeData.style.fontFamliy }"  ref='resume' class='resume-item'>
             <div class='left-content' :style="'background: ' + resumeData.style.color">
                 <div class='avatar'>
-                    <img src='./avatar.jpg' />
+                    <img v-if="resumeData.content.baseMessage.avatar" :src='resumeData.content.baseMessage.avatar' />
+                    <img v-else src='./avatar.jpg' />
+                    <div class='edit-btn'>
+                        <i @click="upImage" class='fa fa-pencil'></i>
+                    </div>
                 </div>
                 <div
                     :style="{
@@ -147,6 +151,7 @@
           <SkillDlg @skillDlgColse='skillDlgColse' :isMainContent='isMainContent' :isShow='isSkillDlgShow' :contentIdx='mainContentIdx' />
           <OtherMessageDlg @otherMessageDlgColse='otherMessageDlgColse' :isMainContent='isMainContent' :isShow='isOtherContent' :contentIdx='mainContentIdx' />
           <TagDlg @tagDlgColse='tagDlgColse' :isMainContent='isMainContent' :isShow='isTagshow' :contentIdx='mainContentIdx' />
+          <ImageDlg @ImageDlgColse='ImageDlgColse' @getImage='getImage' :isShow='isImageshow'/>
         </div>
     </object>
 </template>
@@ -158,7 +163,7 @@ import PositionDlg from '../../../components/dialog/PositionDlg.vue'
 import SkillDlg from '../../../components/dialog/SkillDlg.vue'
 import OtherMessageDlg from '../../../components/dialog/OtherMessageDlg.vue'
 import TagDlg from '../../../components/dialog/TagDlg.vue'
-
+import ImageDlg from '../../../components/dialog/ImageDlg'
 export default {
   data() {
     return {
@@ -170,6 +175,7 @@ export default {
       isSkillDlgShow: false,
       isOtherContent: false,
       isTagshow: false,
+      isImageshow: false,
       mainContentIdx: 0,
       isMainContent: true
     };
@@ -300,6 +306,25 @@ export default {
     tagDlgColse() {
       this.isTagshow = false
     },
+    ImageDlgColse() {
+      this.isImageshow = false
+    },
+    getImage(val) {
+      this.$store.commit({ type: 'changeBaseMessage',avatar: val })
+    },
+    upImage() {
+      if (!this.user.isLogin) {
+        this.isImageshow = true
+      } else {
+        this.$notify({
+            title: '提示',
+            message: '请先登录',
+            type: 'warning',
+            offset: 100,
+            duration: 1000
+      });
+      }
+    },
     eidtMainContent(type,index,isMainContent) {
       console.log(index,isMainContent)
       this.mainContentIdx = index
@@ -322,6 +347,9 @@ export default {
   computed: {
     resumeData() {
       return this.$store.state.resume;
+    },
+    user() {
+      return this.$store.state.user;
     }
   },
   components: {
@@ -331,7 +359,8 @@ export default {
     PositionDlg,
     SkillDlg,
     OtherMessageDlg,
-    TagDlg
+    TagDlg,
+    ImageDlg
   }
 };
 </script>
@@ -380,10 +409,19 @@ export default {
       .avatar {
         margin-top: 30px;
         margin-bottom: 30px;
+        position: relative;
+        &:hover{
+          outline: 1px dashed rgb(207, 207, 207);
+          .edit-btn {
+            display: block;
+          }
+        }
         img {
           margin: 0 auto;
           display: block;
           padding: 5px 4px;
+          width: 128px;
+          height: 160px;
           background-color: #c0c4cc;
         }
       }

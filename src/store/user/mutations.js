@@ -7,5 +7,13 @@ export default {
     for (var item in payload) {
       state[item] = payload[item]
     }
+  },
+  resetState(state) {
+    state.email = ''
+    state.isAdmin = false
+    state.isVip = false
+    state.name = ''
+    state._id = ''
+    state.isLogin = false
   }
 }

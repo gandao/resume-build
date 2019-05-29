@@ -10,10 +10,10 @@
             </ul>
         </div>
         <div class='font-setting'>
-            <div class='title'>{{'字体: ' + font}}</div>
-            <el-select  size='mini'  v-model="fontSize" placeholder="请选择">
+            <div class='title'>{{'字体: ' + fontFamliy}}</div>
+            <el-select  size='mini'  v-model="fontFamliy" placeholder="请选择">
                 <el-option
-                    v-for="item in options"
+                    v-for="item in fontEN"
                     :key="item"
                     :label="item"
                     :value="item">
@@ -22,9 +22,10 @@
             <div class='title title1'>{{'字体大小: ' + fontSize}}</div>
             <el-select  size='mini'  v-model="fontSize" placeholder="请选择">
                 <el-option
-                    v-for="item in options"
+                    v-for="(item,index) in options"
                     :key="item"
                     :label="item"
+                    @change="fontChange(index)"
                     :value="item">
                 </el-option>
             </el-select>
@@ -49,8 +50,8 @@ export default {
             color: ['#0B70BD','#254665','#00C091','#FF7171','#37B754',
                     '#E6A23C','#EE7000','#A29177','#DA180F','#6B4B24',
                     '#648BB3','#597404','#9D57CA','#D4BA38','#69CC41'],
-            font: '微软雅黑'
- 
+            font: ['微软雅黑','黑体','宋体'],
+            fontEN: ['Microsoft YaHei','SimHei','SimSun']
         }
     },
     computed: {
@@ -89,12 +90,25 @@ export default {
                 let payload = { type: 'changeStyle', lineHeight: val + 'px' };
                 this.$store.commit(payload);
             }
+        },
+        fontFamliy: {
+            get() {
+                return this.$store.state.resume.style.fontFamliy
+            },
+            set(val) {
+                let payload = { type: 'changeStyle', fontFamliy: val };
+                this.$store.commit(payload);
+            }
         }
-
     },
     methods: {
         onHandleClose() {
             this.$emit('onClose')
+        },
+        fontChange(idx) {
+            this.fontSelect = idx
+            let payload = { type: 'changeStyle', fontFamliy: this.fontEN[idx] };
+            this.$store.commit(payload);
         }
     }
 }

@@ -1,6 +1,6 @@
 <template>
     <object class='resume'>
-        <div ref='resume' class='resume-item'>
+        <div :style="{ fontFamily: resumeData.style.fontFamliy }"  ref='resume' class='resume-item'>
             <div class='right-content'>
                 <div :style="{
                         paddingTop:resumeData.style.moduleSize,
