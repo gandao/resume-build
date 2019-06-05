@@ -31,7 +31,7 @@
                     </div>
                     <div v-else class='content-wrapper'>
                         <div class='resume-item1' v-for="(item,index) in resumeData" :key="index">
-                            <img class="resume-item-img" :src='"../../common/image/template" + item.resumeType + ".png"' />
+                            <img class="resume-item-img" :src='"../../common/image/template" + (item.resumeType+1) + ".png"' />
                             <div class='resume-item-body'>
                                 <div class='resume-item-name'>{{item.name}}</div>
                                 <div class='resume-item-edit'>
@@ -55,7 +55,6 @@
                 <div class='form-item'>
                     <span class='label'>填写名称</span>
                     <el-input size='mini' v-model="userName"></el-input>
-                    <i :class="mailFilter"></i>
                 </div>
             </el-form> 
             <div slot="footer" class="dialog-footer">
@@ -68,7 +67,6 @@
                 <div class='form-item'>
                     <span class='label'>填写名称</span>
                     <el-input size='mini' v-model="resumeName"></el-input>
-                    <i :class="mailFilter"></i>
                 </div>
             </el-form> 
             <div slot="footer" class="dialog-footer">
@@ -189,6 +187,9 @@ export default {
         }
     },
     created() {
+        if (!this.user.isLogin) {
+            this.$router.push('edit')
+        }
         this.init()
     }
 }

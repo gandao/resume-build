@@ -313,7 +313,7 @@ export default {
       this.$store.commit({ type: 'changeBaseMessage',avatar: val })
     },
     upImage() {
-      if (!this.user.isLogin) {
+      if (this.user.isLogin) {
         this.isImageshow = true
       } else {
         this.$notify({

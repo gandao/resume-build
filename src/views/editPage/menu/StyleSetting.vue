@@ -37,8 +37,6 @@
             <el-slider v-model="moduleSize" :min='10' :max='40' :step="2"></el-slider>
         </div>
         <div class='default-setting'>
-            <div class='defalut-btn'>恢复默认设置<i class='el-icon-refresh'></i></div>
-            <div class='desc'>适用于文字格式紊乱的情况</div>
         </div>
     </div>
 </template>

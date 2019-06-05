@@ -89,8 +89,8 @@ export default {
             });
         },
         save() {
-            if (this.isNoUser()) {
-                if (this.$route.query.resumeId == undefined) {
+            if (!this.isNoUser()) {
+                if (this.$route.query.resumeId !== undefined) {
                     this.axios.post('/resume/saveEdit', { resumeId: this.$route.query.resumeId,data: this.$store.state.resume }).then(res => {
                         if (res.data.id !== -1) {
                             this.notify(res.data.message,'success')

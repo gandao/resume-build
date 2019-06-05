@@ -7,7 +7,7 @@
                   <div class='resume-name'>{{resumeData.content.baseMessage.name.text}}</div>
                   <div  :style="{fontSize: resumeData.style.fontSize,lineHeight: resumeData.style.lineHeight}" class='resume-desc'>{{resumeData.content.baseMessage.desc.text}}</div>
                   <div class='msg-body'>
-                    <span v-for="(item1,index1) in baseMsg" :key='index1'>
+                    <span v-for="(item1,index1) in resumeData.content.baseMessage.data" :key='index1'>
                       <i class='split' v-if='index1 !== 0'></i>
                       <span  :style="{fontSize: resumeData.style.fontSize}">{{item1.text}}</span>
                     </span>
@@ -18,7 +18,11 @@
                 </div>
               </div>
                <div class='resume-avatar-wrapper'>
-                <img class='resume-avatar' src='./avatar.jpg'/>
+                <img v-if="resumeData.content.baseMessage.avatar" :src='resumeData.content.baseMessage.avatar' />
+                <img v-else src='./avatar.jpg' />
+                <div class='edit-btn'>
+                    <i @click="upImage" class='fa fa-pencil'></i>
+                </div>
               </div>
             </div>
             <div class='resume-body'>
@@ -41,7 +45,7 @@
                       <div class='msg-body0-item' v-for="(item1,index1) in item.data" :key='index1'>
                         <i :class='"fa fa-" + item1.url' />
                         <span  :style="{fontSize: resumeData.style.fontSize}">{{item1.text}}</span>
-                      </div>
+                      </div> 
                     </div>
                     <div class='msg-body1' v-else-if='item.type === 1'>
                         <div class='msg-body1-item' v-for='(item1,index1) in item.data' :key="index1">
@@ -119,6 +123,7 @@
           <SkillDlg @skillDlgColse='skillDlgColse' :isMainContent='isMainContent' :isShow='isSkillDlgShow' :contentIdx='mainContentIdx' />
           <OtherMessageDlg @otherMessageDlgColse='otherMessageDlgColse' :isMainContent='isMainContent' :isShow='isOtherContent' :contentIdx='mainContentIdx' />
           <TagDlg @tagDlgColse='tagDlgColse' :isMainContent='isMainContent' :isShow='isTagshow' :contentIdx='mainContentIdx' />
+           <ImageDlg @ImageDlgColse='ImageDlgColse' @getImage='getImage' :isShow='isImageshow'/>
         </div>
     </object>
 </template>
@@ -130,6 +135,7 @@ import PositionDlg from '../../../components/dialog/PositionDlg.vue'
 import SkillDlg from '../../../components/dialog/SkillDlg.vue'
 import OtherMessageDlg from '../../../components/dialog/OtherMessageDlg.vue'
 import TagDlg from '../../../components/dialog/TagDlg.vue'
+import ImageDlg from '../../../components/dialog/ImageDlg'
 import Color from 'color'
 export default {
   data() {
@@ -142,6 +148,7 @@ export default {
       isSkillDlgShow: false,
       isOtherContent: false,
       isTagshow: false,
+      isImageshow: false,
       mainContentIdx: 0,
       isMainContent: true
     };
@@ -272,6 +279,25 @@ export default {
     tagDlgColse() {
       this.isTagshow = false
     },
+    ImageDlgColse() {
+      this.isImageshow = false
+    },
+    getImage(val) {
+      this.$store.commit({ type: 'changeBaseMessage',avatar: val })
+    },
+    upImage() {
+      if (this.user.isLogin) {
+        this.isImageshow = true
+      } else {
+        this.$notify({
+            title: '提示',
+            message: '请先登录',
+            type: 'warning',
+            offset: 100,
+            duration: 1000
+      });
+      }
+    },
     eidtMainContent(type,index,isMainContent) {
       console.log(index,isMainContent)
       this.mainContentIdx = index
@@ -295,11 +321,11 @@ export default {
     resumeData() {
       return this.$store.state.resume;
     },
-    baseMsg() {
-      return [].concat(this.resumeData.content.baseMessage.data,this.resumeData.content.baseMessage.custom)
+    user() {
+      return this.$store.state.user;
     },
     baseColor() {
-      return Color(this.resumeData.style.color).alpha(0.75).string()
+      return Color(this.resumeData.style.color).alpha(0.8)
     }
   },
   components: {
@@ -309,7 +335,8 @@ export default {
     PositionDlg,
     SkillDlg,
     OtherMessageDlg,
-    TagDlg
+    TagDlg,
+    ImageDlg
   }
 };
 </script>
@@ -482,7 +509,7 @@ export default {
       font-size: 0;
       color: #fff;
       padding: 40px 30px;
-      padding-bottom: 20px;
+      padding-bottom: 10px;
       .base-msg-warpper {
         display: inline-block;
         visibility: top;
@@ -527,6 +554,7 @@ export default {
         }
       }
       .resume-avatar-wrapper{
+        position: relative;
         display: inline-block;
         vertical-align: top;
         width: 25%;
@@ -534,8 +562,15 @@ export default {
         img {
           display: inline-block;
           width: 140px;
+          height: 175px;
           border: 5px solid rgb(230, 229, 229);
         }
+        &:hover{
+            outline: 1px dashed rgb(207, 207, 207);
+            .edit-btn {
+              display: block;
+            }
+          }
       }
     }
   }

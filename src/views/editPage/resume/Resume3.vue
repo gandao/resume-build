@@ -3,14 +3,18 @@
         <div ref='resume' :style="{ fontFamily: resumeData.style.fontFamliy }"  class='resume-item'>
             <div  class='resume-head'>
               <div :style="'background: ' + baseColor" class='resume-avatar-wrapper'>
-                <img class='resume-avatar' src='./avatar.jpg'/>
+                <img v-if="resumeData.content.baseMessage.avatar" :src='resumeData.content.baseMessage.avatar' />
+                <img v-else src='./avatar.jpg' />
+                <div class='edit-btn'>
+                    <i @click="upImage" class='fa fa-pencil'></i>
+                </div>
               </div>
               <div :style="'background: ' + resumeData.style.color" class='base-msg-warpper'>
                 <div class='resume-name-wrapper'>
                   <div class='resume-name'>{{resumeData.content.baseMessage.name.text}}</div>
                   <div  :style="{fontSize: resumeData.style.fontSize}" class='resume-desc'>{{resumeData.content.baseMessage.desc.text}}</div>
                   <div class='msg-body'>
-                    <span v-for="(item1,index1) in baseMsg" :key='index1'>
+                    <span v-for="(item1,index1) in resumeData.content.baseMessage.data" :key='index1'>
                       <i class='split' v-if='index1 !== 0'></i>
                       <span  :style="{fontSize: resumeData.style.fontSize}">{{item1.text}}</span>
                     </span>
@@ -113,6 +117,7 @@
           <SkillDlg @skillDlgColse='skillDlgColse' :isMainContent='isMainContent' :isShow='isSkillDlgShow' :contentIdx='mainContentIdx' />
           <OtherMessageDlg @otherMessageDlgColse='otherMessageDlgColse' :isMainContent='isMainContent' :isShow='isOtherContent' :contentIdx='mainContentIdx' />
           <TagDlg @tagDlgColse='tagDlgColse' :isMainContent='isMainContent' :isShow='isTagshow' :contentIdx='mainContentIdx' />
+          <ImageDlg @ImageDlgColse='ImageDlgColse' @getImage='getImage' :isShow='isImageshow'/>
         </div>
     </object>
 </template>
@@ -124,6 +129,7 @@ import PositionDlg from '../../../components/dialog/PositionDlg.vue'
 import SkillDlg from '../../../components/dialog/SkillDlg.vue'
 import OtherMessageDlg from '../../../components/dialog/OtherMessageDlg.vue'
 import TagDlg from '../../../components/dialog/TagDlg.vue'
+import ImageDlg from '../../../components/dialog/ImageDlg'
 import Color from 'color'
 export default {
   data() {
@@ -136,6 +142,7 @@ export default {
       isSkillDlgShow: false,
       isOtherContent: false,
       isTagshow: false,
+      isImageshow: false,
       mainContentIdx: 0,
       isMainContent: true
     };
@@ -266,6 +273,25 @@ export default {
     tagDlgColse() {
       this.isTagshow = false
     },
+    ImageDlgColse() {
+      this.isImageshow = false
+    },
+    getImage(val) {
+      this.$store.commit({ type: 'changeBaseMessage',avatar: val })
+    },
+    upImage() {
+      if (this.user.isLogin) {
+        this.isImageshow = true
+      } else {
+        this.$notify({
+            title: '提示',
+            message: '请先登录',
+            type: 'warning',
+            offset: 100,
+            duration: 1000
+      });
+      }
+    },
     eidtMainContent(type,index,isMainContent) {
       console.log(index,isMainContent)
       this.mainContentIdx = index
@@ -289,11 +315,11 @@ export default {
     resumeData() {
       return this.$store.state.resume;
     },
-    baseMsg() {
-      return [].concat(this.resumeData.content.baseMessage.data,this.resumeData.content.baseMessage.custom)
+    user() {
+      return this.$store.state.user;
     },
     baseColor() {
-      return Color(this.resumeData.style.color).alpha(0.75).string()
+      return Color(this.resumeData.style.color).alpha(0.8)
     }
   },
   components: {
@@ -303,7 +329,8 @@ export default {
     PositionDlg,
     SkillDlg,
     OtherMessageDlg,
-    TagDlg
+    TagDlg,
+    ImageDlg
   }
 };
 </script>
@@ -507,16 +534,24 @@ export default {
         }
       }
       .resume-avatar-wrapper{
+        position: relative;
         background: rgba(200,24,15,1);
         display: inline-block;
         vertical-align: top;
-        width: 25%;
+        height: 260px;
         box-sizing: border-box;
         padding: 40px 30px;
         img {
           display: block;
-          width: 100%;
+          height: 170px;
+          width: 140px;
         }
+          &:hover{
+            outline: 1px dashed rgb(207, 207, 207);
+            .edit-btn {
+              display: block;
+            }
+          }
       }
     }
   }

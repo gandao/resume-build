@@ -3,7 +3,11 @@
         <div ref='resume' :style="{ fontFamily: resumeData.style.fontFamliy }" class='resume-item'>
             <div class='resume-head'>
               <div class='resume-avatar-wrapper'>
-                <img class='resume-avatar' src='./avatar.jpg'/>
+                <img v-if="resumeData.content.baseMessage.avatar" :src='resumeData.content.baseMessage.avatar' />
+                <img v-else src='./avatar.jpg' />
+                <div class='edit-btn'>
+                    <i @click="upImage" class='fa fa-pencil'></i>
+                </div>
               </div>
               <div class='resume-name--wrapper'
                 :style='{
@@ -14,7 +18,7 @@
                 <div class='resume-name'>{{resumeData.content.baseMessage.name.text}}</div>
                 <div  :style="{fontSize: resumeData.style.fontSize,lineHeight: resumeData.style.lineHeight}" class='resume-desc'>{{resumeData.content.baseMessage.desc.text}}</div>
                 <div class='msg-body'>
-                  <span v-for="(item1,index1) in baseMsg" :key='index1'>
+                  <span v-for="(item1,index1) in resumeData.content.baseMessage.data" :key='index1'>
                     <i class='split' v-if='index1 !== 0'></i>
                     <span  :style="{fontSize: resumeData.style.fontSize}">{{item1.text}}</span>
                   </span>
@@ -112,6 +116,7 @@
           <SkillDlg @skillDlgColse='skillDlgColse' :isMainContent='isMainContent' :isShow='isSkillDlgShow' :contentIdx='mainContentIdx' />
           <OtherMessageDlg @otherMessageDlgColse='otherMessageDlgColse' :isMainContent='isMainContent' :isShow='isOtherContent' :contentIdx='mainContentIdx' />
           <TagDlg @tagDlgColse='tagDlgColse' :isMainContent='isMainContent' :isShow='isTagshow' :contentIdx='mainContentIdx' />
+          <ImageDlg @ImageDlgColse='ImageDlgColse' @getImage='getImage' :isShow='isImageshow'/>
         </div>
     </object>
 </template>
@@ -123,7 +128,7 @@ import PositionDlg from '../../../components/dialog/PositionDlg.vue'
 import SkillDlg from '../../../components/dialog/SkillDlg.vue'
 import OtherMessageDlg from '../../../components/dialog/OtherMessageDlg.vue'
 import TagDlg from '../../../components/dialog/TagDlg.vue'
-
+import ImageDlg from '../../../components/dialog/ImageDlg'
 export default {
   data() {
     return {
@@ -135,6 +140,7 @@ export default {
       isSkillDlgShow: false,
       isOtherContent: false,
       isTagshow: false,
+      isImageshow: false,
       mainContentIdx: 0,
       isMainContent: true
     };
@@ -265,6 +271,25 @@ export default {
     tagDlgColse() {
       this.isTagshow = false
     },
+    ImageDlgColse() {
+      this.isImageshow = false
+    },
+    getImage(val) {
+      this.$store.commit({ type: 'changeBaseMessage',avatar: val })
+    },
+    upImage() {
+      if (this.user.isLogin) {
+        this.isImageshow = true
+      } else {
+        this.$notify({
+            title: '提示',
+            message: '请先登录',
+            type: 'warning',
+            offset: 100,
+            duration: 1000
+      });
+      }
+    },
     eidtMainContent(type,index,isMainContent) {
       console.log(index,isMainContent)
       this.mainContentIdx = index
@@ -288,8 +313,8 @@ export default {
     resumeData() {
       return this.$store.state.resume;
     },
-    baseMsg() {
-      return [].concat(this.resumeData.content.baseMessage.data,this.resumeData.content.baseMessage.custom)
+    user() {
+      return this.$store.state.user;
     }
   },
   components: {
@@ -299,7 +324,8 @@ export default {
     PositionDlg,
     SkillDlg,
     OtherMessageDlg,
-    TagDlg
+    TagDlg,
+    ImageDlg
   }
 };
 </script>
@@ -314,7 +340,7 @@ export default {
     box-shadow: 2px 2px 8px #ebeef5, -2px -2px 8px #ebeef5;
     font-size: 0;
     box-sizing: border-box;
-    padding: 20px 40px;
+    padding: 50px 30px;
     
     .msg-title {
         font-size: 1.3rem;
@@ -347,7 +373,7 @@ export default {
     .resume-body,.resume-head {
       display: inline-block;
       vertical-align: top;
-      width: 66.6%;
+      width: 62.6%;
       .resume-msg-item {
         position: relative;
         &:hover {
@@ -441,7 +467,7 @@ export default {
       position: relative;
       display: inline-block;
       vertical-align: top;
-      width: 33.3%;
+      width: 37.3%;
       text-align: center;
       box-sizing: border-box;
       padding-right: 45px;
@@ -486,12 +512,20 @@ export default {
         }
       }
       .resume-avatar-wrapper{
+        position: relative;
         display: inline-block;
         width: 150px;
         img {
           display: block;
           width: 150px;
+          height: 180px;
         }
+         &:hover{
+            outline: 1px dashed rgb(207, 207, 207);
+            .edit-btn {
+              display: block;
+            }
+          }
       }
     }
   }

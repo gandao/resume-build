@@ -53,12 +53,16 @@
                 <div class='form-item'>
                     <span class='label'>填写邮箱</span>
                     <el-input size='mini' class='find-password-input' v-model='findPassword'></el-input>
-                    <span class='timer' v-show= 'timerIsShow'>{{timer+ 's'}}</span>
+                    <el-button size='mini' type="text" @click="post">发送</el-button>
+                </div>
+                <div class='form-item'>
+                    <span class='label'>填验证码</span>
+                    <el-input size='mini' class='find-password-input' v-model='passwordCode'></el-input>
                 </div>
             </el-form> 
             <div slot="footer" class="dialog-footer">
                 <el-button size='mini' @click="closeFind">取 消</el-button>
-                <el-button size='mini' type="primary" @click="post">发送</el-button>
+                <el-button size='mini' type="primary" @click="postCode">发送</el-button>
             </div>
     </el-dialog>
   </div>
@@ -79,6 +83,7 @@ export default {
                 confirm: ''
             },
             findPassword: '',
+            passwordCode: '',
             timer: 60,
             timers: {},
             timerIsShow: false,
@@ -89,7 +94,7 @@ export default {
     methods: {
         funLogin() {
             let { email, password } = this.loginData
-            console.log('dasd')
+
             this.axios.post('/resume/signin',qs.stringify({ email,password })).then((res) => {
                 if (res.data.id !== -1) {
                     window.location.href = window.location.href.replace(/login.html/,'edit')
@@ -123,23 +128,13 @@ export default {
             })
         },
         post() {
-            this.timerIsShow = true;
-            this.tiemrs = setInterval(() => {
-                this.timer--;
-                if (!this.timer) {
-                    clearInterval(this.tiemrs);
-                    this.timer = 60;
+            this.axios.get(`/resume/getcode?email=${this.findPassword}`).then((res) => {
+                if (res.data.id !== -1) {
+                    this.notify('密码发送至邮箱，请注意查收','success')
+                } else {
+                    this.notify(res.data.message)
                 }
-            },1000);
-
-            this.$notify({
-                title: '提示',
-                message: '密码发送至邮箱，请注意查收',
-                type: 'warning',
-                offset: 100,
-                duration: 1500
-            });
-
+            })
         },
         notify(message,type = 'warning') {
             this.$notify({
@@ -149,6 +144,15 @@ export default {
                 offset: 100,
                 duration: 1500
             });
+        },
+        postCode() {
+            this.axios.post(`/resume/postcode`,{ code: this.passwordCode }).then((res) => {
+                if (res.data.id !== -1) {
+                    this.notify(res.data.message,'success')
+                } else {
+                    this.notify(res.data.message)
+                }
+            })
         }
     },
     computed: {
@@ -240,6 +244,7 @@ export default {
             margin-left: 20px;
             &.find-password-input {
                 width: 65%;
+                margin-right: 10px;
             }
         }
         i {
